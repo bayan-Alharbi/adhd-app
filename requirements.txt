@@ -1,5 +1,4 @@
 streamlit
-tensorflow-cpu==2.15.0
 scikit-learn
 numpy
 pandas
@@ -8,3 +7,4 @@ matplotlib
 joblib
 plotly
 h5py
+tensorflow-cpu
