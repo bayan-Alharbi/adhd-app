@@ -170,13 +170,15 @@ elif mode == "📋 Hyperaktiv Analysis":
     f = st.file_uploader("Upload features.csv", type=["csv"])
     if f:
         df_in = pd.read_csv(f, sep=";").fillna(0)
+        df_in = df_in.select_dtypes(include=["number", "object"])
         st.dataframe(df_in.head(), use_container_width=True)
 
         if st.button("🔍 Run Analysis", type="primary"):
             try:
                 ids = df_in["ID"] if "ID" in df_in.columns else None
-                X = df_in.drop(columns=["ID"], errors="ignore").values
-                X_sel = selector.transform(scaler_hyp.transform(X))
+                X = df_in.drop(columns=["ID"], errors="ignore")
+                X = X.select_dtypes(include=["number"]).values
+                X_sel = scaler_hyp.transform(selector.transform(X))
                 probs = lr_base.predict_proba(X_sel)[:, 1]
 
                 x_meta = np.column_stack([
@@ -256,8 +258,9 @@ elif mode == "🧠 META Fusion Diagnosis":
     if hyp_file:
         try:
             df_hyp = pd.read_csv(hyp_file, sep=";").fillna(0)
-            X = df_hyp.drop(columns=["ID"], errors="ignore").values
-            X_sel = selector.transform(scaler_hyp.transform(X))
+            X = df_hyp.drop(columns=["ID"], errors="ignore")
+            X = X.select_dtypes(include=["number"]).values
+            X_sel = scaler_hyp.transform(selector.transform(X))
             probs_hyp = lr_base.predict_proba(X_sel)[:, 1]
             p_hyp = float(probs_hyp.mean())
             has_hyp = 1
