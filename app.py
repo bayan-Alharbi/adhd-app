@@ -24,10 +24,15 @@ from reportlab.lib.enums import TA_CENTER, TA_LEFT
 warnings.filterwarnings("ignore")
 
 st.set_page_config(
+
     page_title="Cortex — ADHD Diagnostic System",
     page_icon="🧠",
     layout="wide"
 )
+
+# ── Session State ─────────────────────────────────────────
+if "diagnosis_history" not in st.session_state:
+    st.session_state.diagnosis_history = []
 
 # ── Custom CSS ────────────────────────────────────────────
 st.markdown("""
@@ -307,7 +312,8 @@ mode = st.sidebar.radio("Navigation", [
     "📊 Model Results",
     "🔬 EEG Analysis",
     "📋 Hyperaktiv Analysis",
-    "🧠 META Fusion Diagnosis"
+    "🧠 META Fusion Diagnosis",
+    "🗂️ History"
 ])
 
 
@@ -619,6 +625,20 @@ elif mode == "🧠 META Fusion Diagnosis":
             src = "Hyperaktiv only"
         st.info(f"Decision based on: {src}")
 
+        # ── Save to History ───────────────────────────────
+        st.session_state.diagnosis_history.append({
+            "Date":      datetime.now().strftime("%Y-%m-%d"),
+            "Time":      datetime.now().strftime("%H:%M:%S"),
+            "Patient":   patient_name if patient_name.strip() else "Unknown",
+            "Age":       patient_age,
+            "Gender":    patient_gender,
+            "EEG Prob":  f"{p_eeg:.1%}" if p_eeg is not None else "—",
+            "HYP Prob":  f"{p_hyp:.1%}" if p_hyp is not None else "—",
+            "META Prob": f"{meta_prob:.1%}",
+            "Diagnosis": "ADHD 🔴" if meta_prob >= 0.5 else "Control 🟢",
+            "Source":    src
+        })
+
         # ── PDF Download ──────────────────────────────────
         st.markdown("---")
         st.subheader("📄 Download Patient Report")
@@ -648,3 +668,38 @@ elif mode == "🧠 META Fusion Diagnosis":
                 st.success("Report ready! Click the button above to download.")
     else:
         st.warning("Please upload at least one file to begin.")
+
+
+# ══════════════════════════════════════════════════════════
+# Page 5 — History
+# ══════════════════════════════════════════════════════════
+elif mode == "🗂️ History":
+    st.title("🗂️ Diagnosis History")
+    st.markdown("Records are saved for this session only and will be cleared when the app is closed.")
+    st.markdown("---")
+
+    if not st.session_state.diagnosis_history:
+        st.info("No diagnoses recorded yet. Run a META Fusion diagnosis to start.")
+    else:
+        df_history = pd.DataFrame(st.session_state.diagnosis_history)
+
+        # ── Summary metrics ───────────────────────────────
+        total  = len(df_history)
+        adhd_n = (df_history["Diagnosis"] == "ADHD 🔴").sum()
+        ctrl_n = total - adhd_n
+
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Total Diagnoses", total)
+        c2.metric("ADHD Detected",   int(adhd_n))
+        c3.metric("Control",         int(ctrl_n))
+
+        st.markdown("---")
+
+        # ── Records table ─────────────────────────────────
+        st.subheader("Session Records")
+        st.dataframe(df_history, use_container_width=True, hide_index=True)
+
+        # ── Clear button ──────────────────────────────────
+        if st.button("🗑️ Clear History", type="secondary"):
+            st.session_state.diagnosis_history = []
+            st.rerun()
