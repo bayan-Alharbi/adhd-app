@@ -8,3 +8,4 @@ matplotlib
 joblib
 plotly
 h5py
+reportlab
