@@ -159,17 +159,13 @@ def generate_pdf_report(patient_name, patient_age, patient_gender,
                        "The integrated analysis of both EEG brain signals and behavioral data "
                        "shows no significant ADHD-associated patterns. Routine follow-up is advised if symptoms persist.")
     elif has_eeg:
-        interp_text = ("EEG brain signal patterns are consistent with ADHD indicators. "
-                       "Behavioral data is recommended to complete the assessment."
+        interp_text = ("EEG brain signal patterns indicate significant ADHD-associated findings."
                        if meta_prob >= 0.5 else
-                       "EEG brain signal patterns show no significant ADHD indicators. "
-                       "Behavioral data can be added for a more complete assessment.")
+                       "EEG brain signal patterns show no significant ADHD-associated findings.")
     else:
-        interp_text = ("Behavioral data patterns are consistent with ADHD indicators. "
-                       "EEG brain signal data is recommended to complete the assessment."
+        interp_text = ("Behavioral data patterns indicate significant ADHD-associated findings."
                        if meta_prob >= 0.5 else
-                       "Behavioral data patterns show no significant ADHD indicators. "
-                       "EEG brain signal data can be added for a more complete assessment.")
+                       "Behavioral data patterns show no significant ADHD-associated findings.")
 
     diagnosis_label = "ADHD Detected" if meta_prob >= 0.5 else "No ADHD Detected"
 
@@ -565,13 +561,6 @@ elif mode == "Integrated ADHD Diagnosis":
                 </div>
             </div>""", unsafe_allow_html=True)
 
-        if has_eeg and has_hyp:
-            src = "Both sources (EEG + Behavioral Data)"
-        elif has_eeg:
-            src = "EEG only"
-        else:
-            src = "Behavioral Data only"
-
         # ── Save to History ───────────────────────────────
         st.session_state.diagnosis_history.append({
             "Date":      datetime.now().strftime("%Y-%m-%d"),
@@ -582,8 +571,7 @@ elif mode == "Integrated ADHD Diagnosis":
             "EEG Prob":  f"{p_eeg:.1%}" if p_eeg is not None else "—",
             "HYP Prob":  f"{p_hyp:.1%}" if p_hyp is not None else "—",
             "META Prob": f"{meta_prob:.1%}",
-            "Diagnosis": "ADHD 🔴" if is_adhd else "Control 🟢",
-            "Source":    src
+            "Diagnosis": "ADHD" if is_adhd else "Control",
         })
 
         # ── PDF Download ──────────────────────────────────
