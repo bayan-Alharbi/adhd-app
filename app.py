@@ -37,34 +37,22 @@ if "diagnosis_history" not in st.session_state:
 # ── Custom CSS ────────────────────────────────────────────
 st.markdown("""
 <style>
-    .cover-title {
-        font-size: 3rem;
-        font-weight: 800;
-        color: #1E3A5F;
-        text-align: center;
-        margin-top: 1rem;
-    }
-    .cover-sub {
-        font-size: 1.2rem;
-        color: #2B6CB0;
-        text-align: center;
-        margin-bottom: 0.5rem;
-    }
-    .cover-desc {
-        font-size: 0.95rem;
-        color: #555;
-        text-align: center;
-        max-width: 650px;
-        margin: 0 auto 2rem auto;
-        line-height: 1.7;
-    }
-    .card {
-        background: #F0F6FF;
-        border-left: 5px solid #2B6CB0;
-        border-radius: 8px;
-        padding: 1rem 1.2rem;
-        margin-bottom: 1rem;
-    }
+    .cover-title { font-size:3rem;font-weight:800;color:#1E3A5F;text-align:center;margin-top:1rem; }
+    .cover-sub   { font-size:1.2rem;color:#2B6CB0;text-align:center;margin-bottom:0.5rem; }
+    .cover-desc  { font-size:0.95rem;color:#555;text-align:center;max-width:680px;margin:0 auto 2rem auto;line-height:1.8; }
+    .fact-card   { background:#F0F6FF;border-left:5px solid #2B6CB0;border-radius:10px;padding:1.1rem 1.3rem;margin-bottom:0.8rem; }
+    .fact-label  { font-size:0.75rem;color:#2B6CB0;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.2rem; }
+    .fact-value  { font-size:1rem;color:#1E3A5F;font-weight:600; }
+    .step-card   { background:#FFFFFF;border:1.5px solid #D0E4FF;border-radius:12px;padding:1.3rem 1.4rem;text-align:center; }
+    .step-num    { font-size:1.8rem;font-weight:800;color:#2B6CB0;margin-bottom:0.4rem; }
+    .step-title  { font-size:1rem;font-weight:700;color:#1E3A5F; }
+    .step-desc   { font-size:0.88rem;color:#666;margin-top:0.3rem;line-height:1.5; }
+    .disclaimer-box { background:#FFF8E1;border-left:5px solid #F59E0B;border-radius:8px;padding:0.9rem 1.2rem;font-size:0.88rem;color:#555;line-height:1.6;margin-top:1.5rem; }
+    .result-box  { border-radius:16px;padding:2rem;text-align:center;margin:1rem 0; }
+    .result-adhd { background:#FFF0F0;border:2px solid #E74C3C; }
+    .result-ctrl { background:#F0FFF4;border:2px solid #2ECC71; }
+    .result-label{ font-size:2rem;font-weight:800;margin-bottom:0.3rem; }
+    .result-prob { font-size:1rem;color:#666; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -309,7 +297,6 @@ st.sidebar.title("Cortex")
 st.sidebar.markdown("---")
 mode = st.sidebar.radio("Navigation", [
     "🏠 Home",
-    "📊 Model Results",
     "🔬 EEG Analysis",
     "📋 Hyperaktiv Analysis",
     "🧠 META Fusion Diagnosis",
@@ -321,104 +308,92 @@ mode = st.sidebar.radio("Navigation", [
 # Page 0 — Home / Cover
 # ══════════════════════════════════════════════════════════
 if mode == "🏠 Home":
+    # ── Hero ─────────────────────────────────────────────
     col_l, col_c, col_r = st.columns([1, 2, 1])
     with col_c:
-        st.image("cortex_logo.png", width=160)
+        logo_path = os.path.join(os.path.dirname(__file__), "cortex_logo.png")
+        if os.path.exists(logo_path):
+            st.image(logo_path, width=160)
 
     st.markdown('<div class="cover-title">Cortex</div>', unsafe_allow_html=True)
     st.markdown('<div class="cover-sub">AI-Powered ADHD Diagnostic System</div>', unsafe_allow_html=True)
     st.markdown("""
     <div class="cover-desc">
-        Cortex is a Late Fusion diagnostic system that combines EEG brain signal analysis
-        with behavioral data to support ADHD detection. It integrates a CNN model for EEG,
-        Logistic Regression for the Hyperaktiv dataset, and a META model that fuses both sources
-        into a single, reliable diagnosis.
+        Cortex is an AI-powered diagnostic system designed to improve the accuracy and speed
+        of ADHD assessment. It uses machine learning to analyze behavioral and cognitive data,
+        providing evidence-based clinical decision support for doctors and mental health professionals.
     </div>
     """, unsafe_allow_html=True)
 
     st.markdown("---")
-    c1, c2, c3, c4 = st.columns(4)
-    c1.metric("CNN AUC",  "0.995", "EEG Model")
-    c2.metric("LR AUC",   "0.958", "Behavioral Model")
-    c3.metric("META AUC", "0.993", "Fusion Model")
-    c4.metric("META F1",  "93.6%", "Final Performance")
+
+    # ── Key Facts ────────────────────────────────────────
+    st.markdown("### Key Facts")
+    kf1, kf2, kf3 = st.columns(3)
+    with kf1:
+        st.markdown("""
+        <div class="fact-card">
+            <div class="fact-label">🎯 Domain</div>
+            <div class="fact-value">ADHD Diagnosis</div>
+        </div>""", unsafe_allow_html=True)
+    with kf2:
+        st.markdown("""
+        <div class="fact-card">
+            <div class="fact-label">🤖 Type</div>
+            <div class="fact-value">AI-Powered Medical Software</div>
+        </div>""", unsafe_allow_html=True)
+    with kf3:
+        st.markdown("""
+        <div class="fact-card">
+            <div class="fact-label">💡 Core Benefit</div>
+            <div class="fact-value">Supporting clinicians with faster, more confident ADHD assessments.</div>
+        </div>""", unsafe_allow_html=True)
 
     st.markdown("---")
+
+    # ── How to Use ───────────────────────────────────────
     st.markdown("### How to Use")
-    col_a, col_b, col_c2 = st.columns(3)
-    with col_a:
+    s1, s2, s3 = st.columns(3)
+    with s1:
         st.markdown("""
-        <div class="card">
-        <b>1. EEG Analysis</b><br>
-        Upload a <code>.mat</code> EEG file to get a CNN-based probability score.
-        </div>
-        """, unsafe_allow_html=True)
-    with col_b:
+        <div class="step-card">
+            <div class="step-num">①</div>
+            <div class="step-title">Upload Patient Data</div>
+            <div class="step-desc">Upload an EEG brain signal file, a behavioral data file, or both.</div>
+        </div>""", unsafe_allow_html=True)
+    with s2:
         st.markdown("""
-        <div class="card">
-        <b>2. Hyperaktiv Analysis</b><br>
-        Upload a <code>features.csv</code> file for behavioral-based diagnosis.
-        </div>
-        """, unsafe_allow_html=True)
-    with col_c2:
+        <div class="step-card">
+            <div class="step-num">②</div>
+            <div class="step-title">AI Analysis</div>
+            <div class="step-desc">Cortex analyzes the data using its AI models and fuses the results into one decision.</div>
+        </div>""", unsafe_allow_html=True)
+    with s3:
         st.markdown("""
-        <div class="card">
-        <b>3. META Fusion</b><br>
-        Upload both files for the final fused diagnosis and download a patient PDF report.
-        </div>
-        """, unsafe_allow_html=True)
+        <div class="step-card">
+            <div class="step-num">③</div>
+            <div class="step-title">Download Report</div>
+            <div class="step-desc">Get a personalized diagnostic report for the patient, ready to download as PDF.</div>
+        </div>""", unsafe_allow_html=True)
 
+    st.markdown("""
+    <div class="disclaimer-box">
+    ⚠️ <b>Disclaimer:</b> Cortex is intended for research and clinical support only.
+    It does not replace a diagnosis by a licensed medical professional.
+    </div>
+    """, unsafe_allow_html=True)
 
-# ══════════════════════════════════════════════════════════
-# Page 1 — Model Results
-# ══════════════════════════════════════════════════════════
-elif mode == "📊 Model Results":
-    st.title("📊 Model Results")
-    st.markdown("---")
-
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric("CNN — AUC",  "0.995")
-    col2.metric("LR — AUC",   "0.958")
-    col3.metric("META — AUC", "0.993")
-    col4.metric("META F1",    "93.6%")
-
-    st.markdown("---")
-    st.subheader("Model Comparison")
-    df = pd.DataFrame({
-        "Model":     ["CNN (EEG)", "LR (Hyperaktiv)", "META Fusion"],
-        "Accuracy":  ["93.2%", "82.4%", "93.7%"],
-        "Precision": ["88.0%", "80.0%", "89.0%"],
-        "Recall":    ["99.0%", "88.9%", "98.8%"],
-        "F1-Score":  ["93.2%", "84.2%", "93.6%"],
-        "AUC":       ["0.995", "0.958", "0.993"],
-    })
-    st.dataframe(df, use_container_width=True, hide_index=True)
-
-    metrics = ["Accuracy", "Precision", "Recall", "F1", "AUC"]
-    fig = go.Figure()
-    fig.add_trace(go.Bar(name="CNN",  x=metrics,
-                         y=[0.932, 0.880, 0.990, 0.932, 0.995], marker_color="#E74C3C"))
-    fig.add_trace(go.Bar(name="LR",   x=metrics,
-                         y=[0.824, 0.800, 0.889, 0.842, 0.958], marker_color="#3498DB"))
-    fig.add_trace(go.Bar(name="META", x=metrics,
-                         y=[0.937, 0.890, 0.988, 0.936, 0.993], marker_color="#2ECC71"))
-    fig.update_layout(barmode="group", yaxis_range=[0.7, 1.05],
-                      height=380, template="plotly_white")
-    st.plotly_chart(fig, use_container_width=True)
-
-    st.subheader("META Model Equation")
-    st.code("z = -3.650 + 5.164·p_eeg + 1.958·p_hyp + (-0.357)·has_eeg + 0.371·has_hyp")
-    st.info("EEG contributes more than Hyperaktiv to the final decision (5.164 vs 1.958)")
 
 
 # ══════════════════════════════════════════════════════════
 # Page 2 — EEG Analysis
 # ══════════════════════════════════════════════════════════
 elif mode == "🔬 EEG Analysis":
-    st.title("🔬 EEG Signal Analysis")
-    st.markdown("Upload a `.mat` file to get a diagnosis.")
+    st.title("🔬 EEG Brain Signal Analysis")
+    st.markdown("Upload a brain signal file to get an AI-based ADHD assessment.")
+    st.markdown("---")
 
-    uploaded = st.file_uploader("Upload EEG file", type=["mat"])
+    uploaded = st.file_uploader("📂 Upload EEG file (.mat)", type=["mat"])
     if uploaded:
         import scipy.io, tempfile
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mat") as tmp:
@@ -435,26 +410,56 @@ elif mode == "🔬 EEG Analysis":
             if sig.shape[1] > sig.shape[0]:
                 sig = sig.T
 
-            st.success(f"File loaded | Shape: {sig.shape}")
-            with st.spinner("Analyzing..."):
+            with st.spinner("🧠 Analyzing brain signal..."):
                 wins = process_eeg(sig)
 
             if wins is not None and len(wins) > 0:
-                probs = predict_eeg(wins)
+                probs    = predict_eeg(wins)
                 mean_prob = probs.mean()
-                c1, c2, c3 = st.columns(3)
-                c1.metric("ADHD Probability", f"{mean_prob:.1%}")
-                c2.metric("Windows", str(len(wins)))
-                c3.metric("Diagnosis", "ADHD 🔴" if mean_prob >= 0.5 else "Control 🟢")
+                is_adhd  = mean_prob >= 0.5
 
-                fig2 = go.Figure(go.Histogram(x=probs, nbinsx=30, marker_color="#E74C3C"))
-                fig2.add_vline(x=0.5, line_dash="dash", annotation_text="Threshold = 0.5")
-                fig2.update_layout(title="Window Probability Distribution",
-                                   xaxis_title="P(ADHD)", yaxis_title="Count",
-                                   height=300, template="plotly_white")
-                st.plotly_chart(fig2, use_container_width=True)
+                # ── Gauge ─────────────────────────────────
+                fig_g = go.Figure(go.Indicator(
+                    mode  = "gauge+number",
+                    value = mean_prob * 100,
+                    number= {"suffix": "%", "font": {"size": 40}},
+                    title = {"text": "ADHD Likelihood", "font": {"size": 18}},
+                    gauge = {
+                        "axis"     : {"range": [0, 100]},
+                        "bar"      : {"color": "#E74C3C" if is_adhd else "#2ECC71"},
+                        "steps"    : [
+                            {"range": [0,  50], "color": "#D5F5E3"},
+                            {"range": [50, 100], "color": "#FADBD8"},
+                        ],
+                        "threshold": {"line": {"color": "black", "width": 3}, "value": 50}
+                    }
+                ))
+                fig_g.update_layout(height=320, template="plotly_white")
+                st.plotly_chart(fig_g, use_container_width=True)
+
+                # ── Result card ───────────────────────────
+                if is_adhd:
+                    st.markdown(f"""
+                    <div class="result-box result-adhd">
+                        <div class="result-label">🔴 ADHD Indicators Detected</div>
+                        <div class="result-prob">The brain signal shows patterns associated with ADHD
+                        (Probability: {mean_prob:.1%})</div>
+                    </div>""", unsafe_allow_html=True)
+                else:
+                    st.markdown(f"""
+                    <div class="result-box result-ctrl">
+                        <div class="result-label">🟢 No ADHD Indicators Detected</div>
+                        <div class="result-prob">The brain signal appears within normal range
+                        (Probability: {mean_prob:.1%})</div>
+                    </div>""", unsafe_allow_html=True)
+
+                st.markdown("""
+                <div class="disclaimer-box">
+                ⚠️ This result is based on EEG analysis only. For a complete assessment,
+                use the <b>META Fusion Diagnosis</b> page with both EEG and behavioral data.
+                </div>""", unsafe_allow_html=True)
             else:
-                st.error("No valid windows extracted from signal.")
+                st.error("Could not process the uploaded file. Please check the signal format.")
         except Exception as e:
             st.error(f"Error: {e}")
         finally:
@@ -465,14 +470,14 @@ elif mode == "🔬 EEG Analysis":
 # Page 3 — Hyperaktiv Analysis
 # ══════════════════════════════════════════════════════════
 elif mode == "📋 Hyperaktiv Analysis":
-    st.title("📋 Hyperaktiv Data Analysis")
-    st.markdown("Upload a `features.csv` file to get predictions.")
+    st.title("📋 Behavioral Data Analysis")
+    st.markdown("Upload a behavioral data file to get an AI-based ADHD assessment.")
+    st.markdown("---")
 
-    f = st.file_uploader("Upload features.csv", type=["csv"])
+    f = st.file_uploader("📂 Upload behavioral data file (.csv)", type=["csv"])
     if f:
         df_in = pd.read_csv(f, sep=";").fillna(0)
         df_in = df_in.select_dtypes(include=["number", "object"])
-        st.dataframe(df_in.head(), use_container_width=True)
 
         if st.button("🔍 Run Analysis", type="primary"):
             try:
@@ -488,15 +493,43 @@ elif mode == "📋 Hyperaktiv Analysis":
                 ])
                 meta_probs = meta_model.predict_proba(x_meta)[:, 1]
 
+                # ── Summary cards ─────────────────────────
+                adhd_n = int((meta_probs >= 0.5).sum())
+                ctrl_n = len(meta_probs) - adhd_n
+                total  = len(meta_probs)
+
+                ca, cb, cc = st.columns(3)
+                ca.metric("Total Records",   total)
+                cb.metric("ADHD Detected 🔴", adhd_n)
+                cc.metric("Control 🟢",       ctrl_n)
+
+                # ── Donut chart ───────────────────────────
+                if total > 0:
+                    fig_pie = go.Figure(go.Pie(
+                        labels = ["ADHD", "Control"],
+                        values = [adhd_n, ctrl_n],
+                        hole   = 0.55,
+                        marker = dict(colors=["#E74C3C", "#2ECC71"]),
+                        textinfo = "percent+label",
+                        textfont = dict(size=14)
+                    ))
+                    fig_pie.update_layout(
+                        title  = "Diagnosis Distribution",
+                        height = 320,
+                        template = "plotly_white",
+                        showlegend = False
+                    )
+                    st.plotly_chart(fig_pie, use_container_width=True)
+
+                # ── Results table ─────────────────────────
+                st.markdown("#### Individual Results")
                 result_df = pd.DataFrame({
-                    "ID":        ids if ids is not None else range(len(probs)),
-                    "LR Prob":   np.round(probs, 3),
+                    "ID"       : ids if ids is not None else range(total),
                     "META Prob": np.round(meta_probs, 3),
                     "Diagnosis": ["ADHD 🔴" if p >= 0.5 else "Control 🟢" for p in meta_probs]
                 })
                 st.dataframe(result_df, use_container_width=True, hide_index=True)
-                adhd_n = (meta_probs >= 0.5).sum()
-                st.info(f"ADHD: {adhd_n} | Control: {len(probs) - adhd_n}")
+
             except Exception as e:
                 st.error(f"Processing error: {e}")
 
