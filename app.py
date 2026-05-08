@@ -264,7 +264,7 @@ mode = st.sidebar.radio("Navigation", [
 # ══════════════════════════════════════════════════════════
 # Page 0 — Home / Cover
 # ══════════════════════════════════════════════════════════
-if mode == "🏠 Home":
+if mode == "Home":
     # ── Logo centered ─────────────────────────────────────
     col_l, col_c, col_r = st.columns([1, 2, 1])
     with col_c:
@@ -287,7 +287,7 @@ if mode == "🏠 Home":
 # ══════════════════════════════════════════════════════════
 # Page 2 — EEG-Based ADHD Diagnosis
 # ══════════════════════════════════════════════════════════
-elif mode == "🔬 EEG-Based ADHD Diagnosis":
+elif mode == "EEG-Based ADHD Diagnosis":
     st.title("EEG-Based ADHD Diagnosis")
     st.markdown("Upload a brain signal file to get an AI-based ADHD diagnostic result.")
     st.markdown("---")
@@ -366,7 +366,7 @@ elif mode == "🔬 EEG-Based ADHD Diagnosis":
 # ══════════════════════════════════════════════════════════
 # Page 3 — Behavioral ADHD Diagnosis
 # ══════════════════════════════════════════════════════════
-elif mode == "📋 Behavioral ADHD Diagnosis":
+elif mode == "Behavioral ADHD Diagnosis":
     st.title("Behavioral ADHD Diagnosis")
     st.markdown("Upload a behavioral data file to get an AI-based ADHD diagnostic result.")
     st.markdown("---")
@@ -438,7 +438,7 @@ elif mode == "📋 Behavioral ADHD Diagnosis":
 # ══════════════════════════════════════════════════════════
 # Page 4 — Integrated ADHD Diagnosis
 # ══════════════════════════════════════════════════════════
-elif mode == "🧠 Integrated ADHD Diagnosis":
+elif mode == "Integrated ADHD Diagnosis":
     st.title("Integrated ADHD Diagnosis")
     st.markdown("Enter patient information and upload data files to generate a full diagnostic report.")
     st.markdown("---")
@@ -620,7 +620,7 @@ elif mode == "🧠 Integrated ADHD Diagnosis":
 # ══════════════════════════════════════════════════════════
 # Page 5 — History
 # ══════════════════════════════════════════════════════════
-elif mode == "🗂️ History":
+elif mode == "History":
     st.title("Diagnosis History")
     st.markdown("Records are saved for this session only and will be cleared when the app is closed.")
     st.markdown("---")
