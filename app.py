@@ -153,20 +153,31 @@ def generate_pdf_report(patient_name, patient_age, patient_gender,
         fontName="Helvetica", alignment=TA_CENTER, leading=15)
 
     if has_eeg and has_hyp:
-        interp_text = ("The integrated analysis of both EEG brain signals and behavioral data "
-                       "indicates significant ADHD-associated patterns. Further clinical evaluation is recommended."
-                       if meta_prob >= 0.5 else
-                       "The integrated analysis of both EEG brain signals and behavioral data "
-                       "shows no significant ADHD-associated patterns. Routine follow-up is advised if symptoms persist.")
-    elif has_eeg:
-        interp_text = ("EEG brain signal patterns indicate significant ADHD-associated findings."
-                       if meta_prob >= 0.5 else
-                       "EEG brain signal patterns show no significant ADHD-associated findings.")
-    else:
-        interp_text = ("Behavioral data patterns indicate significant ADHD-associated findings."
-                       if meta_prob >= 0.5 else
-                       "Behavioral data patterns show no significant ADHD-associated findings.")
+    interp_text = (
+        "The analysis indicates significant ADHD-associated patterns. "
+        "Further clinical evaluation is recommended."
+        if meta_prob >= 0.5 else
+        "The analysis shows no significant ADHD-associated patterns. "
+        "Routine follow-up is advised if symptoms persist."
+    )
 
+elif has_eeg:
+    interp_text = (
+        "The analysis indicates significant ADHD-associated patterns. "
+        "Further clinical evaluation is recommended."
+        if meta_prob >= 0.5 else
+        "The analysis shows no significant ADHD-associated patterns. "
+        "Routine follow-up is advised if symptoms persist."
+    )
+
+elif has_hyp:
+    interp_text = (
+        "The analysis indicates significant ADHD-associated patterns. "
+        "Further clinical evaluation is recommended."
+        if meta_prob >= 0.5 else
+        "The analysis shows no significant ADHD-associated patterns. "
+        "Routine follow-up is advised if symptoms persist."
+    )
     diagnosis_label = "ADHD Detected" if meta_prob >= 0.5 else "No ADHD Detected"
 
     now      = datetime.now()
