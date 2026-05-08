@@ -253,11 +253,11 @@ st.sidebar.image("cortex_logo.png", width=80)
 st.sidebar.title("Cortex")
 st.sidebar.markdown("---")
 mode = st.sidebar.radio("Navigation", [
-    "🏠 Home",
-    "🔬 EEG-Based ADHD Diagnosis",
-    "📋 Behavioral ADHD Diagnosis",
-    "🧠 Integrated ADHD Diagnosis",
-    "🗂️ History"
+    "Home",
+    "EEG-Based ADHD Diagnosis",
+    "Behavioral ADHD Diagnosis",
+    "Integrated ADHD Diagnosis",
+    "History"
 ])
 
 
