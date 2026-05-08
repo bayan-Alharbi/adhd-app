@@ -288,11 +288,11 @@ if mode == "🏠 Home":
 # Page 2 — EEG-Based ADHD Diagnosis
 # ══════════════════════════════════════════════════════════
 elif mode == "🔬 EEG-Based ADHD Diagnosis":
-    st.title("🔬 EEG-Based ADHD Diagnosis")
+    st.title("EEG-Based ADHD Diagnosis")
     st.markdown("Upload a brain signal file to get an AI-based ADHD diagnostic result.")
     st.markdown("---")
 
-    uploaded = st.file_uploader("📂 Upload EEG file (.mat)", type=["mat"])
+    uploaded = st.file_uploader("Upload EEG file (.mat)", type=["mat"])
     if uploaded:
         import scipy.io, tempfile
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mat") as tmp:
@@ -309,7 +309,7 @@ elif mode == "🔬 EEG-Based ADHD Diagnosis":
             if sig.shape[1] > sig.shape[0]:
                 sig = sig.T
 
-            with st.spinner("🧠 Processing brain signal..."):
+            with st.spinner("Processing brain signal..."):
                 wins = process_eeg(sig)
 
             if wins is not None and len(wins) > 0:
@@ -352,7 +352,7 @@ elif mode == "🔬 EEG-Based ADHD Diagnosis":
 
                 st.markdown("""
                 <div class="disclaimer-box">
-                ⚠️ This result is based on EEG data only. For a complete diagnostic report,
+                This result is based on EEG data only. For a complete diagnostic report,
                 use the <b>Integrated ADHD Diagnosis</b> page with both EEG and behavioral data.
                 </div>""", unsafe_allow_html=True)
             else:
@@ -367,11 +367,11 @@ elif mode == "🔬 EEG-Based ADHD Diagnosis":
 # Page 3 — Behavioral ADHD Diagnosis
 # ══════════════════════════════════════════════════════════
 elif mode == "📋 Behavioral ADHD Diagnosis":
-    st.title("📋 Behavioral ADHD Diagnosis")
+    st.title("Behavioral ADHD Diagnosis")
     st.markdown("Upload a behavioral data file to get an AI-based ADHD diagnostic result.")
     st.markdown("---")
 
-    f = st.file_uploader("📂 Upload behavioral data file (.csv)", type=["csv"])
+    f = st.file_uploader("Upload behavioral data file (.csv)", type=["csv"])
     if f:
         try:
             df_in = pd.read_csv(f, sep=";").fillna(0)
@@ -427,7 +427,7 @@ elif mode == "📋 Behavioral ADHD Diagnosis":
 
             st.markdown("""
             <div class="disclaimer-box">
-            ⚠️ This result is based on behavioral data only. For a complete diagnostic report,
+            This result is based on behavioral data only. For a complete diagnostic report,
             use the <b>Integrated ADHD Diagnosis</b> page with both EEG and behavioral data.
             </div>""", unsafe_allow_html=True)
 
@@ -439,7 +439,7 @@ elif mode == "📋 Behavioral ADHD Diagnosis":
 # Page 4 — Integrated ADHD Diagnosis
 # ══════════════════════════════════════════════════════════
 elif mode == "🧠 Integrated ADHD Diagnosis":
-    st.title("🧠 Integrated ADHD Diagnosis")
+    st.title("Integrated ADHD Diagnosis")
     st.markdown("Enter patient information and upload data files to generate a full diagnostic report.")
     st.markdown("---")
 
@@ -456,13 +456,13 @@ elif mode == "🧠 Integrated ADHD Diagnosis":
     st.markdown("---")
 
     # ── File Upload ───────────────────────────────────────
-    st.subheader("📂 Upload Data Files")
+    st.subheader("Upload Data Files")
     col_eeg, col_hyp = st.columns(2)
     with col_eeg:
-        st.markdown("**📡 EEG File**")
+        st.markdown("**EEG File**")
         eeg_file = st.file_uploader("Upload .mat file", type=["mat"], key="meta_eeg")
     with col_hyp:
-        st.markdown("**📋 Behavioral Data File**")
+        st.markdown("**Behavioral Data File**")
         hyp_file = st.file_uploader("Upload .csv file", type=["csv"], key="meta_hyp")
 
     st.markdown("---")
@@ -487,7 +487,7 @@ elif mode == "🧠 Integrated ADHD Diagnosis":
                 sig = sig.reshape(-1, 1)
             if sig.shape[1] > sig.shape[0]:
                 sig = sig.T
-            with st.spinner("🧠 Processing EEG signal..."):
+            with st.spinner("Processing EEG signal..."):
                 wins = process_eeg(sig)
             if wins is not None and len(wins) > 0:
                 probs_eeg = predict_eeg(wins)
@@ -514,7 +514,7 @@ elif mode == "🧠 Integrated ADHD Diagnosis":
 
     # ── Integrated Decision ───────────────────────────────
     if p_eeg is not None or p_hyp is not None:
-        st.subheader("🎯 Diagnostic Result")
+        st.subheader("Diagnostic Result")
 
         x_meta = np.array([[
             p_eeg  if p_eeg is not None else 0.5,
@@ -588,12 +588,12 @@ elif mode == "🧠 Integrated ADHD Diagnosis":
 
         # ── PDF Download ──────────────────────────────────
         st.markdown("---")
-        st.subheader("📄 Download Patient Report")
+        st.subheader("Download Patient Report")
 
         if not patient_name.strip():
             st.warning("Please enter the patient's name to generate the report.")
         else:
-            if st.button("📥 Generate & Download PDF Report", type="primary"):
+            if st.button("Generate & Download PDF Report", type="primary"):
                 with st.spinner("Generating PDF..."):
                     pdf_buffer = generate_pdf_report(
                         patient_name   = patient_name,
@@ -607,7 +607,7 @@ elif mode == "🧠 Integrated ADHD Diagnosis":
                     )
                 fname = f"Cortex_Report_{patient_name.replace(' ', '_')}_{datetime.now().strftime('%Y%m%d_%H%M')}.pdf"
                 st.download_button(
-                    label     = "⬇️ Download Report PDF",
+                    label     = "Download Report PDF",
                     data      = pdf_buffer,
                     file_name = fname,
                     mime      = "application/pdf"
@@ -621,7 +621,7 @@ elif mode == "🧠 Integrated ADHD Diagnosis":
 # Page 5 — History
 # ══════════════════════════════════════════════════════════
 elif mode == "🗂️ History":
-    st.title("🗂️ Diagnosis History")
+    st.title("Diagnosis History")
     st.markdown("Records are saved for this session only and will be cleared when the app is closed.")
     st.markdown("---")
 
@@ -647,6 +647,6 @@ elif mode == "🗂️ History":
         st.dataframe(df_history, use_container_width=True, hide_index=True)
 
         # ── Clear button ──────────────────────────────────
-        if st.button("🗑️ Clear History", type="secondary"):
+        if st.button("Clear History", type="secondary"):
             st.session_state.diagnosis_history = []
             st.rerun()
