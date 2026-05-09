@@ -128,37 +128,37 @@ st.markdown("""
     /* ── Progress steps — fixed vertical timeline ───── */
     .steps-wrapper {
         position: fixed;
-        right: 1.5rem;
-        top: 50%;
-        transform: translateY(-50%);
+        right: 1.2rem;
+        top: 0;
+        bottom: 0;
         z-index: 999;
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         gap: 0;
-        padding: 1rem 0.8rem;
-        background: rgba(6,13,26,0.75);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(232,160,32,0.2);
-        border-radius: 50px;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(232,160,32,0.08);
+        padding: 0;
+        pointer-events: none;
     }
+    .steps-wrapper > * { pointer-events: all; }
     .steps-bar { display: contents; }
     .step-item {
         display: flex; flex-direction: column; align-items: center;
         gap: 0;
     }
     .step-circle {
-        width: 34px; height: 34px; border-radius: 50%;
+        width: 36px; height: 36px; border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
-        font-weight: 800; font-size: 0.78rem;
+        font-weight: 800; font-size: 0.8rem;
         border: 2px solid rgba(125,192,232,0.25);
-        background: rgba(26,58,107,0.7);
+        background: rgba(6,13,26,0.85);
+        backdrop-filter: blur(8px);
         color: #7DC0E8;
         flex-shrink: 0;
         transition: all 0.3s;
         cursor: default;
         position: relative;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.4);
     }
     .step-circle::after {
         content: attr(data-label);
@@ -190,9 +190,9 @@ st.markdown("""
     }
     .step-label { display: none; }
     .step-line {
-        width: 2px; height: 20px;
-        background: linear-gradient(180deg, rgba(232,160,32,0.4), rgba(125,192,232,0.15));
-        margin: 3px 0;
+        width: 2px; height: 28px;
+        background: linear-gradient(180deg, rgba(232,160,32,0.5), rgba(125,192,232,0.2));
+        margin: 2px 0;
     }
 
     /* ── Section header ─────────────────────────────── */
@@ -322,34 +322,43 @@ st.markdown("""
         border-radius: 6px !important; font-weight: 600 !important;
     }
 
-    /* Labels — inputs/selects only, NOT file uploader */
+    /* Labels — all inputs: smaller, no uppercase */
     .stTextInput label, .stNumberInput label,
     .stSelectbox label, .stRadio label {
         color: #F5C85A !important; font-weight: 600 !important;
-        font-size: 0.88rem !important; letter-spacing: 0.03em;
-        text-transform: uppercase;
-    }
-
-    /* File uploader label — plain readable style, no uppercase/oversized */
-    [data-testid="stFileUploader"] label {
-        color: #A8C0E0 !important; font-weight: 500 !important;
-        font-size: 0.85rem !important; letter-spacing: 0 !important;
+        font-size: 0.78rem !important; letter-spacing: 0.01em !important;
         text-transform: none !important;
     }
 
-    /* Fix upload button — collapse font on container, restore on first span only */
+    /* File uploader label */
+    [data-testid="stFileUploader"] label {
+        color: #A8C0E0 !important; font-weight: 500 !important;
+        font-size: 0.78rem !important; letter-spacing: 0 !important;
+        text-transform: none !important;
+    }
+
+    /* Upload button — single "Browse files" text, smaller info text */
     [data-testid="stFileUploaderDropzone"] button {
         font-size: 0 !important;
-        min-width: 88px !important;
+        min-width: 110px !important;
+        padding: 0.35rem 0.9rem !important;
     }
-    [data-testid="stFileUploaderDropzone"] button > span:first-child {
-        font-size: 0.82rem !important;
+    [data-testid="stFileUploaderDropzone"] button p,
+    [data-testid="stFileUploaderDropzone"] button small,
+    [data-testid="stFileUploaderDropzone"] button span {
+        font-size: 0.8rem !important;
         font-weight: 600 !important;
         letter-spacing: 0 !important;
-        display: inline-block !important;
     }
-    [data-testid="stFileUploaderDropzone"] button > span:not(:first-child) {
+    /* Hide the duplicated second text node Streamlit injects */
+    [data-testid="stFileUploaderDropzone"] button > *:nth-child(2) {
         display: none !important;
+    }
+    /* Shrink the "200MB per file" info text */
+    [data-testid="stFileUploaderDropzone"] > div > small,
+    [data-testid="stFileUploaderDropzone"] small {
+        font-size: 0.7rem !important;
+        color: rgba(168,192,224,0.6) !important;
     }
     .stMarkdown strong { color: #F5C85A !important; font-weight: 700 !important; }
 
