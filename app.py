@@ -530,16 +530,6 @@ if mode == "Home":
 # ══════════════════════════════════════════════════════════
 # Page 2 — EEG-Based ADHD Diagnosis
 # ══════════════════════════════════════════════════════════
-
-
-fig_g.update_layout(
-    height=320,
-    paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="rgba(0,0,0,0)",
-    font={"color": "#E8F0FF"},
-    template=None
-)
-
 elif mode == "EEG-Based ADHD Diagnosis":
     st.title("EEG-Based ADHD Diagnosis")
     st.markdown("<span style='color:#E8C170;font-size:0.97rem;'>Upload a brain signal file to get an AI-based ADHD diagnostic result.</span>", unsafe_allow_html=True)
@@ -619,19 +609,6 @@ elif mode == "EEG-Based ADHD Diagnosis":
 # ══════════════════════════════════════════════════════════
 # Page 3 — Behavioral ADHD Diagnosis
 # ══════════════════════════════════════════════════════════
-
-
-
-
-
-fig_g.update_layout(
-    height=320,
-    paper_bgcolor="rgba(0,0,0,0)",
-    plot_bgcolor="rgba(0,0,0,0)",
-    font={"color": "#E8F0FF"},
-    template=None
-)
-   
 elif mode == "Behavioral ADHD Diagnosis":
     st.title("Behavioral ADHD Diagnosis")
     st.markdown("<span style='color:#E8C170;font-size:0.97rem;'>Upload a behavioral data file to get an AI-based ADHD diagnostic result.</span>", unsafe_allow_html=True)
