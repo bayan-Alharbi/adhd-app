@@ -230,6 +230,40 @@ st.markdown("""
         background: linear-gradient(90deg, #2B5FA0, #4A9FD4) !important;
     }
 
+    /* ══ File uploader ══ */
+    [data-testid="stFileUploaderDropzone"] {
+        background: rgba(26,58,107,0.35) !important;
+        border: 2px dashed rgba(232,160,32,0.45) !important;
+        border-radius: 12px !important;
+        transition: all 0.2s;
+    }
+    [data-testid="stFileUploaderDropzone"]:hover {
+        border-color: rgba(245,200,90,0.7) !important;
+        background: rgba(232,160,32,0.06) !important;
+    }
+
+    /* Labels — all inputs */
+    .stTextInput label, .stNumberInput label,
+    .stSelectbox label, .stRadio label {
+        color: #F5C85A !important; font-weight: 600 !important;
+        font-size: 0.78rem !important; letter-spacing: 0.01em !important;
+        text-transform: none !important;
+    }
+
+    /* File uploader label */
+    [data-testid="stFileUploader"] label {
+        color: #A8C0E0 !important; font-weight: 500 !important;
+        font-size: 0.78rem !important; letter-spacing: 0 !important;
+        text-transform: none !important;
+    }
+
+    /* "200MB per file" info text */
+    [data-testid="stFileUploaderDropzone"] small,
+    [data-testid="stFileUploaderDropzone"] > div > small {
+        font-size: 0.68rem !important;
+        color: rgba(168,192,224,0.55) !important;
+    }
+
     .stMarkdown strong { color: #F5C85A !important; font-weight: 700 !important; }
 
     /* Input fields */
@@ -495,7 +529,7 @@ elif mode == "EEG-Based ADHD Diagnosis":
     <p>Upload a brain signal file to receive an AI-based ADHD diagnostic result.</p>
     </div>""", unsafe_allow_html=True)
 
-    uploaded = st.file_uploader("EEG File — Upload .mat", type=["mat"])
+    uploaded = st.file_uploader("EEG File (.mat)", type=["mat"])
     if uploaded:
         import scipy.io, tempfile
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mat") as tmp:
@@ -576,7 +610,7 @@ elif mode == "Behavioral ADHD Diagnosis":
     <p>Upload a behavioral data file to receive an AI-based ADHD diagnostic result.</p>
     </div>""", unsafe_allow_html=True)
 
-    f = st.file_uploader("Behavioral Data File — Upload .csv", type=["csv"])
+    f = st.file_uploader("Behavioral Data File (.csv)", type=["csv"])
     if f:
         try:
             df_in = pd.read_csv(f, sep=";").fillna(0)
@@ -669,9 +703,9 @@ elif mode == "Integrated ADHD Diagnosis":
     st.markdown("<h3 style='color:#F5C85A;margin-bottom:0.8rem;letter-spacing:-0.01em;'>Upload Data Files</h3>", unsafe_allow_html=True)
     col_eeg, col_hyp = st.columns(2)
     with col_eeg:
-        eeg_file = st.file_uploader("EEG File — Upload .mat", type=["mat"], key="meta_eeg")
+        eeg_file = st.file_uploader("EEG File (.mat)", type=["mat"], key="meta_eeg")
     with col_hyp:
-        hyp_file = st.file_uploader("Behavioral Data File — Upload .csv", type=["csv"], key="meta_hyp")
+        hyp_file = st.file_uploader("Behavioral Data File (.csv)", type=["csv"], key="meta_hyp")
 
     p_eeg   = None
     p_hyp   = None
