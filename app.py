@@ -151,16 +151,59 @@ st.markdown("""
     }
     [data-testid="stFileUploader"] * { color: #B8CFEE !important; }
 
-    /* Input fields */
-    .stTextInput input, .stNumberInput input, .stSelectbox select {
-        background: rgba(26,58,107,0.7) !important;
-        color: #E8F0FF !important;
-        border: 1px solid #4A9FD4 !important;
-        border-radius: 6px !important;
+    /* Labels and upload hints */
+    label, .stFileUploader label,
+    [data-testid="stFileUploaderDropzone"] p,
+    [data-testid="stFileUploaderDropzone"] span,
+    [data-testid="stFileUploaderDropzone"] small,
+    .stTextInput label, .stNumberInput label,
+    .stSelectbox label, .stRadio label,
+    .stMarkdown p strong { color: #F5C85A !important; font-weight: 600 !important; }
+
+    /* Upload dropzone */
+    [data-testid="stFileUploaderDropzone"] {
+        background: rgba(26,58,107,0.5) !important;
+        border: 2px dashed #E8A020 !important;
+        border-radius: 10px !important;
     }
-    .stSelectbox [data-baseweb="select"] {
-        background: rgba(26,58,107,0.7) !important;
-        border: 1px solid #4A9FD4 !important;
+    [data-testid="stFileUploaderDropzone"]:hover {
+        border-color: #F5C85A !important;
+        background: rgba(232,160,32,0.08) !important;
+    }
+
+    /* Browse files button inside uploader */
+    [data-testid="stFileUploaderDropzone"] button {
+        background: linear-gradient(90deg, #E8A020, #C04B1A) !important;
+        color: white !important; border: none !important;
+        border-radius: 6px !important; font-weight: 600 !important;
+    }
+
+    /* Input fields */
+    .stTextInput input, .stNumberInput input {
+        background: rgba(13,31,60,0.8) !important;
+        color: #E8F0FF !important;
+        border: 1.5px solid #E8A020 !important;
+        border-radius: 8px !important;
+    }
+    .stTextInput input:focus, .stNumberInput input:focus {
+        border-color: #F5C85A !important;
+        box-shadow: 0 0 0 2px rgba(245,200,90,0.2) !important;
+    }
+
+    /* Selectbox */
+    [data-baseweb="select"] > div {
+        background: rgba(13,31,60,0.8) !important;
+        border: 1.5px solid #E8A020 !important;
+        border-radius: 8px !important;
+        color: #E8F0FF !important;
+    }
+
+    /* Subheader separator line accent */
+    h2::after {
+        content: ''; display: block;
+        width: 40px; height: 3px;
+        background: linear-gradient(90deg, #E8A020, #C04B1A);
+        border-radius: 2px; margin-top: 4px;
     }
 
     /* Dividers */
