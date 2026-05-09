@@ -652,7 +652,6 @@ elif mode == "Integrated ADHD Diagnosis":
     st.markdown("<span style='color:#E8C170;font-size:0.97rem;'>Enter patient information and upload data files to generate a full diagnostic report.</span>", unsafe_allow_html=True)
 
     # خط تدرج تحت العنوان
-    st.markdown('<div class="gradient-divider"></div>', unsafe_allow_html=True)
 
     # ── Patient Info ──────────────────────────────────────
     st.markdown("<h3 style='color:#F5C85A;border-left:4px solid #E8A020;padding-left:0.6rem;margin-bottom:1rem;'>👤 Patient Information</h3>", unsafe_allow_html=True)
