@@ -24,6 +24,7 @@ from reportlab.lib.enums import TA_CENTER, TA_LEFT
 warnings.filterwarnings("ignore")
 
 st.set_page_config(
+
     page_title="Cortex — ADHD Diagnostic System",
     page_icon="🧠",
     layout="wide"
@@ -35,311 +36,199 @@ if "diagnosis_history" not in st.session_state:
 
 # ── Custom CSS ────────────────────────────────────────────
 st.markdown("""
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-    /* ── FIX 1: Font — targeted selectors instead of wildcard * ── */
-    body, p, div, span, label, input, select, textarea,
-    .stMarkdown, .stApp {
-        font-family: 'Inter', sans-serif !important;
-    }
+    /* ── Brand Palette ──────────────────────────────────
+       Gold     #E8A020   Light Gold  #F5C85A
+       Rust     #C04B1A   Light Rust  #E8733A
+       Sky      #4A9FD4   Light Sky   #7DC0E8
+       Navy     #1A3A6B   Mid Navy    #2B5FA0
+    ── ─────────────────────────────────────────────── */
 
-    /* ── FIX 4: Darker main background ── */
+    /* Main background */
     .stApp {
-        background: linear-gradient(160deg, #060D1A 0%, #0A1628 50%, #0F2244 100%);
-        min-height: 100vh;
+        background: linear-gradient(160deg, #0D1F3C 0%, #1A3A6B 50%, #0D2744 100%);
     }
-    .main .block-container {
-        padding-top: 1.5rem;
-        padding-bottom: 3rem;
-        max-width: 1100px;
-    }
+    .main .block-container { padding-top: 2rem; }
 
-    /* All default text */
+    /* All default text white */
     .stApp, .stApp p, .stApp li, .stApp span,
-    .stMarkdown, .stMarkdown p { color: #C8DCFF !important; }
+    .stMarkdown, .stMarkdown p { color: #E8F0FF !important; }
 
-    /* Headings */
-    h1 {
-        color: #F5C85A !important;
-        font-weight: 900 !important;
-        font-size: 2rem !important;
-        letter-spacing: -0.02em;
-        margin-bottom: 0.2rem !important;
-    }
-    h2 { color: #7DC0E8 !important; font-weight: 700 !important; }
-    h3 { color: #F5C85A !important; font-weight: 700 !important; }
+    /* Page titles */
+    h1 { color: #F5C85A !important; font-weight: 800 !important; }
+    h2 { color: #7DC0E8 !important; }
+    h3 { color: #7DC0E8 !important; }
 
     /* Sidebar */
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #060E1C 0%, #0F2040 60%, #1A3A6B 100%) !important;
-        border-right: 1px solid rgba(74,159,212,0.25);
+        background: linear-gradient(180deg, #0A1628 0%, #1A3A6B 100%) !important;
+        border-right: 1px solid #2B5FA0;
     }
-    [data-testid="stSidebar"] * { color: #C8DCFF !important; }
+    [data-testid="stSidebar"] * { color: #E8F0FF !important; }
     [data-testid="stSidebar"] .stRadio label {
-        color: #C8DCFF !important; font-weight: 500;
-        padding: 0.3rem 0; transition: color 0.2s;
+        color: #7DC0E8 !important; font-weight: 500;
     }
-    [data-testid="stSidebar"] .stRadio label:hover { color: #F5C85A !important; }
     [data-testid="stSidebar"] h1,
     [data-testid="stSidebar"] h2,
     [data-testid="stSidebar"] h3 { color: #F5C85A !important; }
-    [data-testid="stSidebar"] hr { border-color: rgba(74,159,212,0.2) !important; }
+    [data-testid="stSidebar"] hr { border-color: #2B5FA0 !important; }
 
-    /* ── Glassmorphism card ─────────────────────────── */
-    .glass-card {
-        background: rgba(255,255,255,0.04);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(125,192,232,0.18);
-        border-radius: 16px;
-        padding: 1.8rem 2rem;
-        margin-bottom: 1.2rem;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.25);
-    }
-    .glass-card-gold {
-        background: rgba(232,160,32,0.07);
-        border: 1px solid rgba(232,160,32,0.25);
-        border-radius: 16px;
-        padding: 1.8rem 2rem;
-        margin-bottom: 1.2rem;
-        box-shadow: 0 4px 24px rgba(0,0,0,0.2);
-    }
-
-    /* ── Page header banner ─────────────────────────── */
-    .page-header {
-        background: linear-gradient(90deg, rgba(232,160,32,0.12), rgba(192,75,26,0.08));
-        border-left: 4px solid #E8A020;
-        border-radius: 0 12px 12px 0;
-        padding: 1rem 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-    .page-header h1 {
-        margin: 0 !important; padding: 0;
-        font-size: 1.7rem !important;
+    /* Cover page */
+    .cover-title {
+        font-size: 3.2rem; font-weight: 900; text-align: center; margin-top: 1rem;
         background: linear-gradient(90deg, #F5C85A, #E8A020);
         -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .page-header p {
-        margin: 0.2rem 0 0 0;
-        color: #C8DCFF !important;
-        font-size: 0.9rem !important;
-    }
-
-    /* ── Progress steps ─────────────────────────────── */
-    .steps-bar {
-        display: flex; align-items: center; justify-content: center;
-        gap: 0; margin: 1.2rem 0 1.8rem 0;
-    }
-    .step-item {
-        display: flex; flex-direction: column; align-items: center;
-        position: relative;
-    }
-    .step-circle {
-        width: 36px; height: 36px; border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        font-weight: 800; font-size: 0.85rem;
-        border: 2px solid rgba(125,192,232,0.3);
-        background: rgba(26,58,107,0.6);
-        color: #7DC0E8;
-        transition: all 0.3s;
-    }
-    .step-circle.active {
-        background: linear-gradient(135deg, #E8A020, #C04B1A);
-        border-color: #E8A020;
-        color: white;
-        box-shadow: 0 0 16px rgba(232,160,32,0.4);
-    }
-    .step-circle.done {
-        background: rgba(74,159,212,0.2);
-        border-color: #4A9FD4;
-        color: #4A9FD4;
-    }
-    .step-label {
-        font-size: 0.72rem; color: #7DC0E8 !important;
-        margin-top: 0.3rem; text-align: center; white-space: nowrap;
-    }
-    .step-line {
-        width: 60px; height: 2px;
-        background: linear-gradient(90deg, rgba(125,192,232,0.3), rgba(125,192,232,0.1));
-        margin: 0 4px; margin-bottom: 22px;
-    }
-
-    /* ── Section header ─────────────────────────────── */
-    .section-header {
-        display: flex; align-items: center; gap: 0.6rem;
-        margin-bottom: 1rem; margin-top: 0.5rem;
-    }
-    .section-header-line {
-        flex: 1; height: 1px;
-        background: linear-gradient(90deg, rgba(232,160,32,0.4), transparent);
-    }
-    .section-title {
-        font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em;
-        color: #E8A020 !important; text-transform: uppercase;
-    }
-
-    /* Cover */
-    .cover-title {
-        font-size: 3.5rem; font-weight: 900; text-align: center;
-        margin-top: 1.5rem; letter-spacing: -0.03em;
-        background: linear-gradient(90deg, #F5C85A 0%, #E8A020 50%, #E8733A 100%);
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    }
     .cover-sub {
-        font-size: 1.1rem; color: #7DC0E8 !important;
-        text-align: center; font-weight: 500;
-        letter-spacing: 0.05em; margin-bottom: 0.5rem;
-        text-transform: uppercase;
+        font-size: 1.2rem; color: #7DC0E8 !important;
+        text-align: center; font-weight: 600; margin-bottom: 0.5rem;
     }
     .cover-desc {
-        font-size: 0.96rem; color: #A8C0E0 !important; text-align: center;
-        max-width: 660px; margin: 0.5rem auto 2rem auto; line-height: 2;
+        font-size: 0.95rem; color: #B8CFEE !important; text-align: center;
+        max-width: 680px; margin: 0 auto 2rem auto; line-height: 1.9;
     }
 
     /* Result boxes */
-    .result-box {
-        border-radius: 20px; padding: 2.2rem 2rem;
-        text-align: center; margin: 1rem 0;
-        backdrop-filter: blur(8px);
+    .result-box   { border-radius: 16px; padding: 2rem; text-align: center; margin: 1rem 0; }
+    .result-adhd  {
+        background: linear-gradient(135deg, rgba(192,75,26,0.25), rgba(232,115,58,0.15));
+        border: 2px solid #E8733A;
     }
-    .result-adhd {
-        background: linear-gradient(135deg, rgba(192,75,26,0.2), rgba(232,115,58,0.1));
-        border: 1.5px solid rgba(232,115,58,0.5);
-        box-shadow: 0 0 30px rgba(192,75,26,0.15);
+    .result-ctrl  {
+        background: linear-gradient(135deg, rgba(74,159,212,0.25), rgba(125,192,232,0.15));
+        border: 2px solid #4A9FD4;
     }
-    .result-ctrl {
-        background: linear-gradient(135deg, rgba(74,159,212,0.2), rgba(125,192,232,0.1));
-        border: 1.5px solid rgba(74,159,212,0.5);
-        box-shadow: 0 0 30px rgba(74,159,212,0.15);
-    }
-    .result-label { font-size: 2rem; font-weight: 900; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+    .result-label { font-size: 2rem; font-weight: 800; margin-bottom: 0.4rem; }
     .result-adhd .result-label { color: #E8733A; }
     .result-ctrl  .result-label { color: #7DC0E8; }
-    .result-prob  { font-size: 0.95rem; color: #A8C0E0 !important; line-height: 1.7; }
+    .result-prob  { font-size: 1rem; color: #B8CFEE !important; }
 
-    /* Disclaimer */
+    /* Disclaimer box */
     .disclaimer-box {
-        background: rgba(232,160,32,0.08);
-        border: 1px solid rgba(232,160,32,0.2);
-        border-radius: 10px; padding: 0.9rem 1.2rem;
-        font-size: 0.85rem; color: #C8A84A !important;
-        line-height: 1.6; margin-top: 1.5rem;
+        background: rgba(232,160,32,0.12);
+        border-left: 4px solid #E8A020;
+        border-radius: 8px; padding: 0.9rem 1.2rem;
+        font-size: 0.88rem; color: #D4B96A !important; line-height: 1.6; margin-top: 1.5rem;
     }
 
     /* Metric cards */
     [data-testid="stMetric"] {
-        background: rgba(255,255,255,0.04) !important;
-        border: 1px solid rgba(74,159,212,0.25) !important;
-        border-radius: 12px !important; padding: 1rem 1.2rem !important;
-        backdrop-filter: blur(8px);
+        background: rgba(43,95,160,0.35) !important;
+        border: 1px solid #4A9FD4 !important;
+        border-radius: 10px; padding: 0.8rem 1rem;
     }
-    [data-testid="stMetricLabel"] {
-        color: #7DC0E8 !important; font-weight: 600 !important;
-        font-size: 0.8rem !important; text-transform: uppercase; letter-spacing: 0.05em;
-    }
-    [data-testid="stMetricValue"] {
-        color: #F5C85A !important; font-weight: 800 !important; font-size: 1.8rem !important;
-    }
+    [data-testid="stMetricLabel"] { color: #7DC0E8 !important; font-weight: 700; }
+    [data-testid="stMetricValue"] { color: #F5C85A !important; font-weight: 800; }
 
-    /* Buttons primary */
+    /* Buttons */
     .stButton > button[kind="primary"] {
         background: linear-gradient(90deg, #E8A020, #C04B1A) !important;
         color: white !important; border: none !important;
-        border-radius: 10px !important; font-weight: 700 !important;
-        font-size: 0.95rem !important; padding: 0.6rem 1.4rem !important;
-        letter-spacing: 0.02em;
-        box-shadow: 0 4px 15px rgba(232,160,32,0.3) !important;
-        transition: all 0.2s !important;
+        border-radius: 8px !important; font-weight: 700 !important;
+        font-size: 0.95rem !important;
     }
     .stButton > button[kind="primary"]:hover {
         background: linear-gradient(90deg, #F5C85A, #E8733A) !important;
-        box-shadow: 0 6px 20px rgba(232,160,32,0.45) !important;
-        transform: translateY(-1px);
     }
     .stButton > button[kind="secondary"] {
         background: transparent !important;
-        border: 1.5px solid rgba(232,115,58,0.6) !important;
-        color: #E8733A !important; border-radius: 10px !important;
+        border: 2px solid #E8733A !important;
+        color: #E8733A !important; border-radius: 8px !important;
     }
 
     /* Download button */
     .stDownloadButton > button {
-        background: linear-gradient(90deg, #1A3A6B, #2B5FA0) !important;
-        color: white !important; border: none !important;
-        border-radius: 10px !important; font-weight: 700 !important;
-        box-shadow: 0 4px 15px rgba(43,95,160,0.3) !important;
-    }
-    .stDownloadButton > button:hover {
         background: linear-gradient(90deg, #2B5FA0, #4A9FD4) !important;
+        color: white !important; border: none !important;
+        border-radius: 8px !important; font-weight: 700 !important;
     }
 
     /* File uploader */
+    [data-testid="stFileUploader"] {
+        background: rgba(26,58,107,0.6) !important;
+        border: 2px dashed #4A9FD4 !important;
+        border-radius: 10px !important;
+    }
+    [data-testid="stFileUploader"] * { color: #B8CFEE !important; }
+
+    /* Labels and upload hints */
+    label, .stFileUploader label,
+    [data-testid="stFileUploaderDropzone"] p,
+    [data-testid="stFileUploaderDropzone"] span,
+    [data-testid="stFileUploaderDropzone"] small,
+    .stTextInput label, .stNumberInput label,
+    .stSelectbox label, .stRadio label,
+    .stMarkdown p strong { color: #F5C85A !important; font-weight: 600 !important; }
+
+    /* Upload dropzone */
     [data-testid="stFileUploaderDropzone"] {
-        background: rgba(26,58,107,0.35) !important;
-        border: 2px dashed rgba(232,160,32,0.45) !important;
-        border-radius: 12px !important;
-        transition: all 0.2s;
+        background: rgba(26,58,107,0.5) !important;
+        border: 2px dashed #E8A020 !important;
+        border-radius: 10px !important;
     }
     [data-testid="stFileUploaderDropzone"]:hover {
-        border-color: rgba(245,200,90,0.7) !important;
-        background: rgba(232,160,32,0.06) !important;
+        border-color: #F5C85A !important;
+        background: rgba(232,160,32,0.08) !important;
     }
-    [data-testid="stFileUploader"] * { color: #A8C0E0 !important; }
+
+    /* Browse files button inside uploader */
     [data-testid="stFileUploaderDropzone"] button {
         background: linear-gradient(90deg, #E8A020, #C04B1A) !important;
         color: white !important; border: none !important;
         border-radius: 6px !important; font-weight: 600 !important;
     }
 
-    /* Labels */
-    label, .stTextInput label, .stNumberInput label,
-    .stSelectbox label, .stRadio label {
-        color: #F5C85A !important; font-weight: 600 !important;
-        font-size: 0.88rem !important; letter-spacing: 0.03em;
-        text-transform: uppercase;
-    }
-    .stMarkdown strong { color: #F5C85A !important; font-weight: 700 !important; }
-
     /* Input fields */
     .stTextInput input, .stNumberInput input {
-        background: rgba(10,22,40,0.7) !important;
+        background: rgba(13,31,60,0.8) !important;
         color: #E8F0FF !important;
-        border: 1.5px solid rgba(232,160,32,0.4) !important;
-        border-radius: 8px !important; font-size: 0.95rem !important;
+        border: 1.5px solid #E8A020 !important;
+        border-radius: 8px !important;
     }
     .stTextInput input:focus, .stNumberInput input:focus {
         border-color: #F5C85A !important;
-        box-shadow: 0 0 0 3px rgba(245,200,90,0.15) !important;
+        box-shadow: 0 0 0 2px rgba(245,200,90,0.2) !important;
     }
+
+    /* Selectbox */
     [data-baseweb="select"] > div {
-        background: rgba(10,22,40,0.7) !important;
-        border: 1.5px solid rgba(232,160,32,0.4) !important;
-        border-radius: 8px !important; color: #E8F0FF !important;
+        background: rgba(13,31,60,0.8) !important;
+        border: 1.5px solid #E8A020 !important;
+        border-radius: 8px !important;
+        color: #E8F0FF !important;
+    }
+
+    /* Page subtitle (st.markdown description line) */
+    .stApp .stMarkdown p { color: #E8C170 !important; }
+
+    /* Subheader text */
+    h3 { color: #F5C85A !important; }
+
+    /* st.markdown bold used as section labels */
+    .stMarkdown strong { color: #F5C85A !important; font-weight: 700 !important; }
+
+    /* st.subheader with 👤 and section titles */
+    [data-testid="stHeading"] h3,
+    [data-testid="stHeading"] h2 {
+        color: #F5C85A !important;
+        border-left: 4px solid #E8A020;
+        padding-left: 0.6rem;
     }
 
     /* Dividers */
-    hr { border-color: rgba(74,159,212,0.15) !important; }
+    hr { border-color: #2B5FA0 !important; opacity: 0.6; }
 
     /* Dataframe */
     [data-testid="stDataFrame"] {
-        border-radius: 12px !important; overflow: hidden;
-        border: 1px solid rgba(74,159,212,0.2) !important;
+        background: rgba(13,31,60,0.8) !important;
+        border-radius: 8px;
     }
 
     /* Alerts */
-    .stAlert {
-        border-radius: 10px !important;
-        background: rgba(43,95,160,0.25) !important;
-        border: 1px solid rgba(74,159,212,0.3) !important;
-    }
+    .stAlert { border-radius: 8px !important; background: rgba(43,95,160,0.3) !important; }
 
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: rgba(10,22,40,0.5); }
-    ::-webkit-scrollbar-thumb {
-        background: linear-gradient(180deg, #E8A020, #2B5FA0);
-        border-radius: 3px;
-    }
+    /* Spinner */
+    .stSpinner { color: #F5C85A !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -383,16 +272,6 @@ def predict_eeg(wins):
     input_name = cnn_model.get_inputs()[0].name
     probs = cnn_model.run(None, {input_name: wins_f})[0].ravel()
     return probs
-
-
-# ── Helper: Transparent Gauge Layout ─────────────────────
-def transparent_gauge_layout(height=320):
-    return dict(
-        height=height,
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(color="#E8F0FF"),
-    )
 
 
 # ── PDF Report Generator ──────────────────────────────────
@@ -537,6 +416,8 @@ def generate_pdf_report(patient_name, patient_age, patient_gender,
     return buffer
 
 
+
+
 # ══════════════════════════════════════════════════════════
 # SIDEBAR
 # ══════════════════════════════════════════════════════════
@@ -556,6 +437,7 @@ mode = st.sidebar.radio("Navigation", [
 # Page 0 — Home / Cover
 # ══════════════════════════════════════════════════════════
 if mode == "Home":
+    # ── Logo centered ─────────────────────────────────────
     col_l, col_c, col_r = st.columns([1, 2, 1])
     with col_c:
         logo_path = os.path.join(os.path.dirname(__file__), "cortex_logo.png")
@@ -578,13 +460,11 @@ if mode == "Home":
 # Page 2 — EEG-Based ADHD Diagnosis
 # ══════════════════════════════════════════════════════════
 elif mode == "EEG-Based ADHD Diagnosis":
-    st.markdown("""<div class="page-header">
-    <h1>EEG-Based ADHD Diagnosis</h1>
-    <p>Upload a brain signal file to receive an AI-based ADHD diagnostic result.</p>
-    </div>""", unsafe_allow_html=True)
+    st.title("EEG-Based ADHD Diagnosis")
+    st.markdown("<span style='color:#E8C170;font-size:0.97rem;'>Upload a brain signal file to get an AI-based ADHD diagnostic result.</span>", unsafe_allow_html=True)
+    st.markdown("---")
 
-    # FIX 3: label merged into uploader text
-    uploaded = st.file_uploader("EEG File — Upload .mat", type=["mat"])
+    uploaded = st.file_uploader("Upload EEG file (.mat)", type=["mat"])
     if uploaded:
         import scipy.io, tempfile
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mat") as tmp:
@@ -609,24 +489,22 @@ elif mode == "EEG-Based ADHD Diagnosis":
                 mean_prob = probs.mean()
                 is_adhd   = mean_prob >= 0.5
 
-                # FIX 2: Transparent gauge background
                 fig_g = go.Figure(go.Indicator(
                     mode  = "gauge+number",
                     value = mean_prob * 100,
-                    number= {"suffix": "%", "font": {"size": 40, "color": "#E8F0FF"}},
-                    title = {"text": "ADHD Likelihood", "font": {"size": 18, "color": "#E8F0FF"}},
+                    number= {"suffix": "%", "font": {"size": 40}},
+                    title = {"text": "ADHD Likelihood", "font": {"size": 18}},
                     gauge = {
-                        "axis"     : {"range": [0, 100], "tickcolor": "#E8F0FF"},
+                        "axis"     : {"range": [0, 100]},
                         "bar"      : {"color": "#E74C3C" if is_adhd else "#2ECC71"},
-                        "bgcolor"  : "rgba(232,160,32,0.08)",
                         "steps"    : [
                             {"range": [0,  50], "color": "rgba(46,204,113,0.15)"},
                             {"range": [50, 100], "color": "rgba(231,76,60,0.15)"},
                         ],
-                        "threshold": {"line": {"color": "#E8F0FF", "width": 3}, "value": 50},
+                        "threshold": {"line": {"color": "black", "width": 3}, "value": 50}
                     }
                 ))
-                fig_g.update_layout(**transparent_gauge_layout(320))
+                fig_g.update_layout(height=320, template="plotly_white")
                 st.plotly_chart(fig_g, use_container_width=True)
 
                 if is_adhd:
@@ -661,13 +539,11 @@ elif mode == "EEG-Based ADHD Diagnosis":
 # Page 3 — Behavioral ADHD Diagnosis
 # ══════════════════════════════════════════════════════════
 elif mode == "Behavioral ADHD Diagnosis":
-    st.markdown("""<div class="page-header">
-    <h1>Behavioral ADHD Diagnosis</h1>
-    <p>Upload a behavioral data file to receive an AI-based ADHD diagnostic result.</p>
-    </div>""", unsafe_allow_html=True)
+    st.title("Behavioral ADHD Diagnosis")
+    st.markdown("<span style='color:#E8C170;font-size:0.97rem;'>Upload a behavioral data file to get an AI-based ADHD diagnostic result.</span>", unsafe_allow_html=True)
+    st.markdown("---")
 
-    # FIX 3: label merged into uploader text
-    f = st.file_uploader("Behavioral Data File — Upload .csv", type=["csv"])
+    f = st.file_uploader("Upload behavioral data file (.csv)", type=["csv"])
     if f:
         try:
             df_in = pd.read_csv(f, sep=";").fillna(0)
@@ -686,26 +562,26 @@ elif mode == "Behavioral ADHD Diagnosis":
             mean_prob  = float(meta_probs.mean())
             is_adhd    = mean_prob >= 0.5
 
-            # FIX 2: Transparent gauge background
+            # ── Gauge ─────────────────────────────────────
             fig_g = go.Figure(go.Indicator(
                 mode  = "gauge+number",
                 value = mean_prob * 100,
-                number= {"suffix": "%", "font": {"size": 40, "color": "#E8F0FF"}},
-                title = {"text": "ADHD Likelihood", "font": {"size": 18, "color": "#E8F0FF"}},
+                number= {"suffix": "%", "font": {"size": 40}},
+                title = {"text": "ADHD Likelihood", "font": {"size": 18}},
                 gauge = {
-                    "axis"     : {"range": [0, 100], "tickcolor": "#E8F0FF"},
+                    "axis"     : {"range": [0, 100]},
                     "bar"      : {"color": "#E74C3C" if is_adhd else "#2ECC71"},
-                    "bgcolor"  : "rgba(232,160,32,0.08)",
                     "steps"    : [
                         {"range": [0,  50], "color": "rgba(46,204,113,0.15)"},
                         {"range": [50, 100], "color": "rgba(231,76,60,0.15)"},
                     ],
-                    "threshold": {"line": {"color": "#E8F0FF", "width": 3}, "value": 50},
+                    "threshold": {"line": {"color": "black", "width": 3}, "value": 50}
                 }
             ))
-            fig_g.update_layout(**transparent_gauge_layout(320))
+            fig_g.update_layout(height=320, template="plotly_white")
             st.plotly_chart(fig_g, use_container_width=True)
 
+            # ── Result card ───────────────────────────────
             if is_adhd:
                 st.markdown(f"""
                 <div class="result-box result-adhd">
@@ -735,35 +611,12 @@ elif mode == "Behavioral ADHD Diagnosis":
 # Page 4 — Integrated ADHD Diagnosis
 # ══════════════════════════════════════════════════════════
 elif mode == "Integrated ADHD Diagnosis":
-    st.markdown("""<div class="page-header">
-    <h1>Integrated ADHD Diagnosis</h1>
-    <p>Enter patient information and upload data files to generate a full diagnostic report.</p>
-    </div>""", unsafe_allow_html=True)
-    st.markdown("""<div class="steps-bar">
-      <div class="step-item">
-        <div class="step-circle active">1</div>
-        <div class="step-label">Patient Info</div>
-      </div>
-      <div class="step-line"></div>
-      <div class="step-item">
-        <div class="step-circle active">2</div>
-        <div class="step-label">Upload Data</div>
-      </div>
-      <div class="step-line"></div>
-      <div class="step-item">
-        <div class="step-circle active">3</div>
-        <div class="step-label">Diagnosis</div>
-      </div>
-      <div class="step-line"></div>
-      <div class="step-item">
-        <div class="step-circle active">4</div>
-        <div class="step-label">Report</div>
-      </div>
-    </div>""", unsafe_allow_html=True)
+    st.title("Integrated ADHD Diagnosis")
+    st.markdown("<span style='color:#E8C170;font-size:0.97rem;'>Enter patient information and upload data files to generate a full diagnostic report.</span>", unsafe_allow_html=True)
+    st.markdown("---")
 
     # ── Patient Info ──────────────────────────────────────
-    st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
-    st.markdown("<h3 style='color:#F5C85A;margin-bottom:1rem;letter-spacing:-0.01em;'>👤 Patient Information</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color:#F5C85A;border-left:4px solid #E8A020;padding-left:0.6rem;margin-bottom:1rem;'>👤 Patient Information</h3>", unsafe_allow_html=True)
     pi1, pi2, pi3 = st.columns(3)
     with pi1:
         patient_name   = st.text_input("Full Name", placeholder="e.g. Ahmed Al-Rashidi")
@@ -771,19 +624,20 @@ elif mode == "Integrated ADHD Diagnosis":
         patient_age    = st.number_input("Age", min_value=1, max_value=120, value=25)
     with pi3:
         patient_gender = st.selectbox("Gender", ["Male", "Female"])
-    st.markdown("</div>", unsafe_allow_html=True)
 
-    st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
-    st.markdown("<h3 style='color:#F5C85A;margin-bottom:1rem;letter-spacing:-0.01em;'>Upload Data Files</h3>", unsafe_allow_html=True)
+    st.markdown("---")
+
+    # ── File Upload ───────────────────────────────────────
+    st.markdown("<h3 style='color:#F5C85A;border-left:4px solid #E8A020;padding-left:0.6rem;margin-bottom:1rem;'>Upload Data Files</h3>", unsafe_allow_html=True)
     col_eeg, col_hyp = st.columns(2)
-
-    # FIX 3: labels merged into uploader text — removes the stacked-label overlap
     with col_eeg:
-        eeg_file = st.file_uploader("EEG File — Upload .mat", type=["mat"], key="meta_eeg")
+        st.markdown("<span style='color:#F5C85A;font-weight:700;font-size:1rem;'>EEG File</span>", unsafe_allow_html=True)
+        eeg_file = st.file_uploader("Upload .mat file", type=["mat"], key="meta_eeg")
     with col_hyp:
-        hyp_file = st.file_uploader("Behavioral Data File — Upload .csv", type=["csv"], key="meta_hyp")
+        st.markdown("<span style='color:#F5C85A;font-weight:700;font-size:1rem;'>Behavioral Data File</span>", unsafe_allow_html=True)
+        hyp_file = st.file_uploader("Upload .csv file", type=["csv"], key="meta_hyp")
 
-    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("---")
 
     p_eeg   = None
     p_hyp   = None
@@ -842,26 +696,26 @@ elif mode == "Integrated ADHD Diagnosis":
         meta_prob = meta_model.predict_proba(x_meta)[0, 1]
         is_adhd   = meta_prob >= 0.5
 
-        # FIX 2: Transparent gauge background
+        # ── Gauge ─────────────────────────────────────────
         fig_g = go.Figure(go.Indicator(
             mode  = "gauge+number",
             value = meta_prob * 100,
-            number= {"suffix": "%", "font": {"size": 40, "color": "#E8F0FF"}},
-            title = {"text": "ADHD Likelihood", "font": {"size": 18, "color": "#E8F0FF"}},
+            number= {"suffix": "%", "font": {"size": 40}},
+            title = {"text": "ADHD Likelihood", "font": {"size": 18}},
             gauge = {
-                "axis"     : {"range": [0, 100], "tickcolor": "#E8F0FF"},
+                "axis"     : {"range": [0, 100]},
                 "bar"      : {"color": "#E74C3C" if is_adhd else "#2ECC71"},
-                "bgcolor"  : "rgba(232,160,32,0.08)",
                 "steps"    : [
                     {"range": [0,  50], "color": "rgba(46,204,113,0.15)"},
                     {"range": [50, 100], "color": "rgba(231,76,60,0.15)"},
                 ],
-                "threshold": {"line": {"color": "#E8F0FF", "width": 3}, "value": 50},
+                "threshold": {"line": {"color": "black", "width": 3}, "value": 50}
             }
         ))
-        fig_g.update_layout(**transparent_gauge_layout(340))
+        fig_g.update_layout(height=340, template="plotly_white")
         st.plotly_chart(fig_g, use_container_width=True)
 
+        # ── Result card ───────────────────────────────────
         if is_adhd:
             st.markdown(f"""
             <div class="result-box result-adhd">
@@ -931,10 +785,8 @@ elif mode == "Integrated ADHD Diagnosis":
 # Page 5 — History
 # ══════════════════════════════════════════════════════════
 elif mode == "History":
-    st.markdown("""<div class="page-header">
-    <h1>Diagnosis History</h1>
-    <p>Session records — cleared when the app is closed.</p>
-    </div>""", unsafe_allow_html=True)
+    st.title("Diagnosis History")
+    st.markdown("Records are saved for this session only and will be cleared when the app is closed.")
     st.markdown("---")
 
     if not st.session_state.diagnosis_history:
@@ -942,6 +794,7 @@ elif mode == "History":
     else:
         df_history = pd.DataFrame(st.session_state.diagnosis_history)
 
+        # ── Summary metrics ───────────────────────────────
         total  = len(df_history)
         adhd_n = (df_history["Diagnosis"] == "ADHD 🔴").sum()
         ctrl_n = total - adhd_n
@@ -952,9 +805,12 @@ elif mode == "History":
         c3.metric("Control",         int(ctrl_n))
 
         st.markdown("---")
+
+        # ── Records table ─────────────────────────────────
         st.subheader("Session Records")
         st.dataframe(df_history, use_container_width=True, hide_index=True)
 
+        # ── Clear button ──────────────────────────────────
         if st.button("Clear History", type="secondary"):
             st.session_state.diagnosis_history = []
             st.rerun()
