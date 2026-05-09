@@ -243,23 +243,23 @@ st.markdown("""
     }
     [data-testid="stFileUploader"] * { color: #A8C0E0 !important; }
 
-    /* Browse button */
-    [data-testid="stFileUploaderDropzone"] button {
+    /* Browse button - first button only in dropzone */
+    [data-testid="stFileUploaderDropzone"] > div > button:first-of-type {
         background: linear-gradient(90deg, #E8A020, #C04B1A) !important;
         border: none !important;
         border-radius: 8px !important;
         padding: 0.4rem 1.1rem !important;
     }
-    [data-testid="stFileUploaderDropzone"] button:hover {
+    [data-testid="stFileUploaderDropzone"] > div > button:first-of-type:hover {
         background: linear-gradient(90deg, #F5C85A, #E8733A) !important;
         cursor: pointer !important;
     }
-    [data-testid="stFileUploaderDropzone"] button span,
-    [data-testid="stFileUploaderDropzone"] button div,
-    [data-testid="stFileUploaderDropzone"] button p {
+    [data-testid="stFileUploaderDropzone"] > div > button:first-of-type span,
+    [data-testid="stFileUploaderDropzone"] > div > button:first-of-type div,
+    [data-testid="stFileUploaderDropzone"] > div > button:first-of-type p {
         display: none !important;
     }
-    [data-testid="stFileUploaderDropzone"] button::after {
+    [data-testid="stFileUploaderDropzone"] > div > button:first-of-type::after {
         content: "Upload";
         color: white !important;
         font-size: 0.82rem !important;
