@@ -125,76 +125,7 @@ st.markdown("""
         font-size: 0.9rem !important;
     }
 
-    /* ── Progress steps — fixed vertical timeline ───── */
-    .steps-wrapper {
-        position: fixed;
-        right: 1.2rem;
-        top: 0;
-        bottom: 0;
-        z-index: 999;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 0;
-        padding: 0;
-        pointer-events: none;
-    }
-    .steps-wrapper > * { pointer-events: all; }
-    .steps-bar { display: contents; }
-    .step-item {
-        display: flex; flex-direction: column; align-items: center;
-        gap: 0;
-    }
-    .step-circle {
-        width: 36px; height: 36px; border-radius: 50%;
-        display: flex; align-items: center; justify-content: center;
-        font-weight: 800; font-size: 0.8rem;
-        border: 2px solid rgba(125,192,232,0.25);
-        background: rgba(6,13,26,0.85);
-        backdrop-filter: blur(8px);
-        color: #7DC0E8;
-        flex-shrink: 0;
-        transition: all 0.3s;
-        cursor: default;
-        position: relative;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.4);
-    }
-    .step-circle::after {
-        content: attr(data-label);
-        position: absolute;
-        right: 44px;
-        background: rgba(6,13,26,0.92);
-        color: #F5C85A;
-        font-size: 0.72rem;
-        font-weight: 600;
-        white-space: nowrap;
-        padding: 3px 8px;
-        border-radius: 6px;
-        border: 1px solid rgba(232,160,32,0.25);
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.2s;
-    }
-    .step-circle:hover::after { opacity: 1; }
-    .step-circle.active {
-        background: linear-gradient(135deg, #E8A020, #C04B1A);
-        border-color: #E8A020;
-        color: white;
-        box-shadow: 0 0 14px rgba(232,160,32,0.5);
-    }
-    .step-circle.done {
-        background: rgba(74,159,212,0.2);
-        border-color: #4A9FD4;
-        color: #4A9FD4;
-    }
-    .step-label { display: none; }
-    .step-line {
-        width: 2px; height: 28px;
-        background: linear-gradient(180deg, rgba(232,160,32,0.5), rgba(125,192,232,0.2));
-        margin: 2px 0;
-    }
-
+    
     /* ── Section header ─────────────────────────────── */
     .section-header {
         display: flex; align-items: center; gap: 0.6rem;
@@ -211,20 +142,20 @@ st.markdown("""
 
     /* Cover */
     .cover-title {
-        font-size: 3.5rem; font-weight: 900; text-align: center;
-        margin-top: 1.5rem; letter-spacing: -0.03em;
+        font-size: 2.6rem; font-weight: 900; text-align: center;
+        margin-top: 1rem; letter-spacing: -0.03em;
         background: linear-gradient(90deg, #F5C85A 0%, #E8A020 50%, #E8733A 100%);
         -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
     .cover-sub {
-        font-size: 1.1rem; color: #7DC0E8 !important;
+        font-size: 0.88rem; color: #7DC0E8 !important;
         text-align: center; font-weight: 500;
-        letter-spacing: 0.05em; margin-bottom: 0.5rem;
+        letter-spacing: 0.12em; margin-bottom: 0.4rem;
         text-transform: uppercase;
     }
     .cover-desc {
-        font-size: 0.96rem; color: #A8C0E0 !important; text-align: center;
-        max-width: 660px; margin: 0.5rem auto 2rem auto; line-height: 2;
+        font-size: 0.88rem; color: #A8C0E0 !important; text-align: center;
+        max-width: 580px; margin: 0.4rem auto 1.5rem auto; line-height: 1.85;
     }
 
     /* Result boxes */
@@ -304,7 +235,7 @@ st.markdown("""
         background: linear-gradient(90deg, #2B5FA0, #4A9FD4) !important;
     }
 
-    /* File uploader */
+    /* File uploader dropzone */
     [data-testid="stFileUploaderDropzone"] {
         background: rgba(26,58,107,0.35) !important;
         border: 2px dashed rgba(232,160,32,0.45) !important;
@@ -316,10 +247,55 @@ st.markdown("""
         background: rgba(232,160,32,0.06) !important;
     }
     [data-testid="stFileUploader"] * { color: #A8C0E0 !important; }
+
+    /* Upload button — hide all inner content, inject clean label via ::after */
     [data-testid="stFileUploaderDropzone"] button {
         background: linear-gradient(90deg, #E8A020, #C04B1A) !important;
-        color: white !important; border: none !important;
-        border-radius: 6px !important; font-weight: 600 !important;
+        color: transparent !important;
+        border: none !important;
+        border-radius: 8px !important;
+        font-size: 0 !important;
+        padding: 0.4rem 1.1rem !important;
+        min-width: 110px !important;
+        position: relative !important;
+        overflow: visible !important;
+    }
+    [data-testid="stFileUploaderDropzone"] button * {
+        display: none !important;
+    }
+    [data-testid="stFileUploaderDropzone"] button::after {
+        content: "Browse files";
+        color: white;
+        font-size: 0.82rem;
+        font-weight: 700;
+        font-family: 'Inter', sans-serif;
+        letter-spacing: 0.01em;
+        pointer-events: none;
+    }
+
+    /* Add-file button — replace "Add files" with "＋" */
+    [data-testid="stFileUploaderDropzone"] ~ div button,
+    [data-testid="stFileUploader"] [data-testid="stFileUploaderDeleteBtn"] ~ button,
+    [data-testid="stFileUploader"] button[title="Add files"],
+    [data-testid="stFileUploader"] button[aria-label*="add"],
+    [data-testid="stFileUploader"] button[aria-label*="Add"] {
+        font-size: 0 !important;
+        min-width: 32px !important;
+        max-width: 32px !important;
+        min-height: 32px !important;
+        padding: 0 !important;
+        border-radius: 50% !important;
+        background: rgba(232,160,32,0.15) !important;
+        border: 1.5px solid rgba(232,160,32,0.4) !important;
+    }
+    [data-testid="stFileUploader"] button[title="Add files"]::after,
+    [data-testid="stFileUploader"] button[aria-label*="add"]::after,
+    [data-testid="stFileUploader"] button[aria-label*="Add"]::after {
+        content: "+";
+        font-size: 1.1rem;
+        font-weight: 300;
+        color: #F5C85A;
+        line-height: 1;
     }
 
     /* Labels — all inputs: smaller, no uppercase */
@@ -337,28 +313,11 @@ st.markdown("""
         text-transform: none !important;
     }
 
-    /* Upload button — single "Browse files" text, smaller info text */
-    [data-testid="stFileUploaderDropzone"] button {
-        font-size: 0 !important;
-        min-width: 110px !important;
-        padding: 0.35rem 0.9rem !important;
-    }
-    [data-testid="stFileUploaderDropzone"] button p,
-    [data-testid="stFileUploaderDropzone"] button small,
-    [data-testid="stFileUploaderDropzone"] button span {
-        font-size: 0.8rem !important;
-        font-weight: 600 !important;
-        letter-spacing: 0 !important;
-    }
-    /* Hide the duplicated second text node Streamlit injects */
-    [data-testid="stFileUploaderDropzone"] button > *:nth-child(2) {
-        display: none !important;
-    }
     /* Shrink the "200MB per file" info text */
-    [data-testid="stFileUploaderDropzone"] > div > small,
-    [data-testid="stFileUploaderDropzone"] small {
-        font-size: 0.7rem !important;
-        color: rgba(168,192,224,0.6) !important;
+    [data-testid="stFileUploaderDropzone"] small,
+    [data-testid="stFileUploaderDropzone"] > div > small {
+        font-size: 0.68rem !important;
+        color: rgba(168,192,224,0.55) !important;
     }
     .stMarkdown strong { color: #F5C85A !important; font-weight: 700 !important; }
 
@@ -800,23 +759,6 @@ elif mode == "Integrated ADHD Diagnosis":
     st.markdown("""<div class="page-header">
     <h1>Integrated ADHD Diagnosis</h1>
     <p>Enter patient information and upload data files to generate a full diagnostic report.</p>
-    </div>""", unsafe_allow_html=True)
-    st.markdown("""<div class="steps-wrapper">
-      <div class="step-item">
-        <div class="step-circle active" data-label="Patient Info">1</div>
-      </div>
-      <div class="step-line"></div>
-      <div class="step-item">
-        <div class="step-circle active" data-label="Upload Data">2</div>
-      </div>
-      <div class="step-line"></div>
-      <div class="step-item">
-        <div class="step-circle active" data-label="Diagnosis">3</div>
-      </div>
-      <div class="step-line"></div>
-      <div class="step-item">
-        <div class="step-circle active" data-label="Report">4</div>
-      </div>
     </div>""", unsafe_allow_html=True)
 
     # ── Patient Info ──────────────────────────────────────
