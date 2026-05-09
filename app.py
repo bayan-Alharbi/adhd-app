@@ -34,7 +34,7 @@ if "diagnosis_history" not in st.session_state:
     st.session_state.diagnosis_history = []
 
 # ── Custom CSS ────────────────────────────────────────────
-# ── Custom CSS ────────────────────────────────────────────
+
 st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -263,6 +263,7 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
+
 @st.cache_resource
 def load_models():
     cnn  = ort.InferenceSession("models/cnn_eeg_model.onnx")
