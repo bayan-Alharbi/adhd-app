@@ -243,66 +243,25 @@ st.markdown("""
     }
     [data-testid="stFileUploader"] * { color: #A8C0E0 !important; }
 
-    /* Browse button — hide original text, show "Upload" via ::after */
+    /* Style the browse button WITHOUT hiding its children */
     [data-testid="stFileUploaderDropzone"] button {
         background: linear-gradient(90deg, #E8A020, #C04B1A) !important;
+        color: white !important;
         border: none !important;
         border-radius: 8px !important;
         font-weight: 700 !important;
+        font-size: 0.82rem !important;
         padding: 0.4rem 1.1rem !important;
-        min-width: 90px !important;
-        font-size: 0 !important;
-        color: transparent !important;
-        position: relative !important;
+        min-width: 110px !important;
     }
     [data-testid="stFileUploaderDropzone"] button:hover {
         background: linear-gradient(90deg, #F5C85A, #E8733A) !important;
         cursor: pointer !important;
     }
-    /* Hide internal spans/svgs but keep the button itself clickable */
-    [data-testid="stFileUploaderDropzone"] button > span,
-    [data-testid="stFileUploaderDropzone"] button > svg,
-    [data-testid="stFileUploaderDropzone"] button > p {
-        display: none !important;
-    }
-    /* Inject clean label */
-    [data-testid="stFileUploaderDropzone"] button::after {
-        content: "Upload";
+    /* Keep button text white (overrides the * selector above) */
+    [data-testid="stFileUploaderDropzone"] button span,
+    [data-testid="stFileUploaderDropzone"] button p {
         color: white !important;
-        font-size: 0.82rem !important;
-        font-weight: 700 !important;
-        font-family: 'Inter', sans-serif !important;
-        pointer-events: none;
-    }
-
-    /* "Add files" button → small round + button */
-    [data-testid="stFileUploader"] button[title="Add files"],
-    [data-testid="stFileUploader"] button[aria-label*="add"],
-    [data-testid="stFileUploader"] button[aria-label*="Add"] {
-        background: rgba(232,160,32,0.15) !important;
-        border: 1.5px solid rgba(232,160,32,0.5) !important;
-        border-radius: 50% !important;
-        width: 28px !important; height: 28px !important;
-        min-width: 28px !important; max-width: 28px !important;
-        padding: 0 !important;
-        font-size: 0 !important;
-        color: transparent !important;
-        position: relative !important;
-    }
-    [data-testid="stFileUploader"] button[title="Add files"] > span,
-    [data-testid="stFileUploader"] button[aria-label*="add"] > span,
-    [data-testid="stFileUploader"] button[aria-label*="Add"] > span {
-        display: none !important;
-    }
-    [data-testid="stFileUploader"] button[title="Add files"]::after,
-    [data-testid="stFileUploader"] button[aria-label*="add"]::after,
-    [data-testid="stFileUploader"] button[aria-label*="Add"]::after {
-        content: "+";
-        color: #F5C85A !important;
-        font-size: 1.2rem !important;
-        font-weight: 400 !important;
-        line-height: 1 !important;
-        pointer-events: none;
     }
 
     /* Labels — all inputs */
