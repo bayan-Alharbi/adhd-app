@@ -36,7 +36,7 @@ if "diagnosis_history" not in st.session_state:
 # ── Custom CSS ────────────────────────────────────────────
 st.markdown("""
 <style>
-    /* ── Brand Palette ──────────────────────────────────
+  /* ── Brand Palette ──────────────────────────────────
    Gold     #E8A020   Light Gold  #F5C85A
    Rust     #C04B1A   Light Rust  #E8733A
    Sky      #4A9FD4   Light Sky   #7DC0E8
