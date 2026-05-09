@@ -291,12 +291,26 @@ st.markdown("""
         border-radius: 6px !important; font-weight: 600 !important;
     }
 
-    /* Labels */
-    label, .stTextInput label, .stNumberInput label,
+    /* Labels — inputs/selects only, NOT file uploader */
+    .stTextInput label, .stNumberInput label,
     .stSelectbox label, .stRadio label {
         color: #F5C85A !important; font-weight: 600 !important;
         font-size: 0.88rem !important; letter-spacing: 0.03em;
         text-transform: uppercase;
+    }
+
+    /* File uploader label — plain readable style, no uppercase/oversized */
+    [data-testid="stFileUploader"] label {
+        color: #A8C0E0 !important; font-weight: 500 !important;
+        font-size: 0.85rem !important; letter-spacing: 0 !important;
+        text-transform: none !important;
+    }
+
+    /* Fix upload button internal text overlap */
+    [data-testid="stFileUploaderDropzone"] button span {
+        font-size: 0.82rem !important;
+        letter-spacing: 0 !important;
+        font-weight: 600 !important;
     }
     .stMarkdown strong { color: #F5C85A !important; font-weight: 700 !important; }
 
