@@ -246,20 +246,26 @@ st.markdown("""
     /* Browse button */
     [data-testid="stFileUploaderDropzone"] button {
         background: linear-gradient(90deg, #E8A020, #C04B1A) !important;
-        color: white !important;
         border: none !important;
         border-radius: 8px !important;
-        font-weight: 700 !important;
-        font-size: 0.82rem !important;
         padding: 0.4rem 1.1rem !important;
+        color: transparent !important;
+        font-size: 0 !important;
     }
     [data-testid="stFileUploaderDropzone"] button:hover {
         background: linear-gradient(90deg, #F5C85A, #E8733A) !important;
         cursor: pointer !important;
     }
-    [data-testid="stFileUploaderDropzone"] button span,
-    [data-testid="stFileUploaderDropzone"] button p {
+    [data-testid="stFileUploaderDropzone"] button span {
+        font-size: 0 !important;
+        color: transparent !important;
+    }
+    [data-testid="stFileUploaderDropzone"] button::after {
+        content: "Upload";
         color: white !important;
+        font-size: 0.82rem !important;
+        font-weight: 700 !important;
+        font-family: 'Inter', sans-serif !important;
     }
 
     /* Labels — all inputs */
