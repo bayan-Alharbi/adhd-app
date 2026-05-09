@@ -243,29 +243,23 @@ st.markdown("""
     }
     [data-testid="stFileUploader"] * { color: #A8C0E0 !important; }
 
-    /* Browse button - first button only in dropzone */
-    [data-testid="stFileUploaderDropzone"] > div > button:first-of-type {
+    /* Browse button */
+    [data-testid="stFileUploaderDropzone"] button {
         background: linear-gradient(90deg, #E8A020, #C04B1A) !important;
+        color: white !important;
         border: none !important;
         border-radius: 8px !important;
+        font-weight: 700 !important;
+        font-size: 0.82rem !important;
         padding: 0.4rem 1.1rem !important;
     }
-    [data-testid="stFileUploaderDropzone"] > div > button:first-of-type:hover {
+    [data-testid="stFileUploaderDropzone"] button:hover {
         background: linear-gradient(90deg, #F5C85A, #E8733A) !important;
         cursor: pointer !important;
     }
-    [data-testid="stFileUploaderDropzone"] > div > button:first-of-type span,
-    [data-testid="stFileUploaderDropzone"] > div > button:first-of-type div,
-    [data-testid="stFileUploaderDropzone"] > div > button:first-of-type p {
-        display: none !important;
-    }
-    [data-testid="stFileUploaderDropzone"] > div > button:first-of-type::after {
-        content: "Upload";
+    [data-testid="stFileUploaderDropzone"] button span,
+    [data-testid="stFileUploaderDropzone"] button p {
         color: white !important;
-        font-size: 0.82rem !important;
-        font-weight: 700 !important;
-        font-family: 'Inter', sans-serif !important;
-        display: inline-block !important;
     }
 
     /* Labels — all inputs */
