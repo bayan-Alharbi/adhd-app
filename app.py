@@ -37,22 +37,99 @@ if "diagnosis_history" not in st.session_state:
 # ── Custom CSS ────────────────────────────────────────────
 st.markdown("""
 <style>
-    .cover-title { font-size:3rem;font-weight:800;color:#1E3A5F;text-align:center;margin-top:1rem; }
-    .cover-sub   { font-size:1.2rem;color:#2B6CB0;text-align:center;margin-bottom:0.5rem; }
-    .cover-desc  { font-size:0.95rem;color:#555;text-align:center;max-width:680px;margin:0 auto 2rem auto;line-height:1.8; }
-    .fact-card   { background:#F0F6FF;border-left:5px solid #2B6CB0;border-radius:10px;padding:1.1rem 1.3rem;margin-bottom:0.8rem; }
-    .fact-label  { font-size:0.75rem;color:#2B6CB0;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.2rem; }
-    .fact-value  { font-size:1rem;color:#1E3A5F;font-weight:600; }
-    .step-card   { background:#FFFFFF;border:1.5px solid #D0E4FF;border-radius:12px;padding:1.3rem 1.4rem;text-align:center; }
-    .step-num    { font-size:1.8rem;font-weight:800;color:#2B6CB0;margin-bottom:0.4rem; }
-    .step-title  { font-size:1rem;font-weight:700;color:#1E3A5F; }
-    .step-desc   { font-size:0.88rem;color:#666;margin-top:0.3rem;line-height:1.5; }
-    .disclaimer-box { background:#FFF8E1;border-left:5px solid #F59E0B;border-radius:8px;padding:0.9rem 1.2rem;font-size:0.88rem;color:#555;line-height:1.6;margin-top:1.5rem; }
-    .result-box  { border-radius:16px;padding:2rem;text-align:center;margin:1rem 0; }
-    .result-adhd { background:#FFF0F0;border:2px solid #E74C3C; }
-    .result-ctrl { background:#F0FFF4;border:2px solid #2ECC71; }
-    .result-label{ font-size:2rem;font-weight:800;margin-bottom:0.3rem; }
-    .result-prob { font-size:1rem;color:#666; }
+    /* ── Brand Palette ──────────────────────────────────
+       Gold     #E8A020   Light Gold  #F5C85A
+       Rust     #C04B1A   Light Rust  #E8733A
+       Sky      #4A9FD4   Light Sky   #7DC0E8
+       Navy     #1A3A6B   Mid Navy    #2B5FA0
+    ── ─────────────────────────────────────────────── */
+
+    /* Sidebar */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #1A3A6B 0%, #2B5FA0 100%);
+    }
+    [data-testid="stSidebar"] * { color: #FFFFFF !important; }
+    [data-testid="stSidebar"] .stRadio label { color: #F5C85A !important; font-weight: 600; }
+    [data-testid="stSidebar"] hr { border-color: #4A9FD4 !important; }
+
+    /* Page title */
+    h1 { color: #1A3A6B !important; }
+    h2, h3 { color: #2B5FA0 !important; }
+
+    /* Cover */
+    .cover-title {
+        font-size: 3.2rem; font-weight: 900; text-align: center; margin-top: 1rem;
+        background: linear-gradient(90deg, #E8A020, #C04B1A);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .cover-sub {
+        font-size: 1.2rem; color: #2B5FA0; text-align: center;
+        font-weight: 600; margin-bottom: 0.5rem;
+    }
+    .cover-desc {
+        font-size: 0.95rem; color: #444; text-align: center;
+        max-width: 680px; margin: 0 auto 2rem auto; line-height: 1.9;
+    }
+
+    /* Result boxes */
+    .result-box   { border-radius: 16px; padding: 2rem; text-align: center; margin: 1rem 0; }
+    .result-adhd  { background: linear-gradient(135deg, #FFF4EE, #FFE8DC); border: 2px solid #C04B1A; }
+    .result-ctrl  { background: linear-gradient(135deg, #EEF6FF, #DCF0FF); border: 2px solid #4A9FD4; }
+    .result-label { font-size: 2rem; font-weight: 800; margin-bottom: 0.4rem; }
+    .result-adhd .result-label { color: #C04B1A; }
+    .result-ctrl  .result-label { color: #1A3A6B; }
+    .result-prob  { font-size: 1rem; color: #555; }
+
+    /* Disclaimer box */
+    .disclaimer-box {
+        background: linear-gradient(135deg, #FFF8EE, #FFF0D4);
+        border-left: 5px solid #E8A020;
+        border-radius: 8px; padding: 0.9rem 1.2rem;
+        font-size: 0.88rem; color: #555; line-height: 1.6; margin-top: 1.5rem;
+    }
+
+    /* Metric cards */
+    [data-testid="stMetric"] {
+        background: linear-gradient(135deg, #EEF4FF, #DCE8FF);
+        border: 1px solid #7DC0E8;
+        border-radius: 10px; padding: 0.8rem 1rem;
+    }
+    [data-testid="stMetricLabel"] { color: #2B5FA0 !important; font-weight: 700; }
+    [data-testid="stMetricValue"] { color: #1A3A6B !important; }
+
+    /* Buttons */
+    .stButton > button[kind="primary"] {
+        background: linear-gradient(90deg, #E8A020, #C04B1A) !important;
+        color: white !important; border: none !important;
+        border-radius: 8px !important; font-weight: 700 !important;
+    }
+    .stButton > button[kind="primary"]:hover {
+        background: linear-gradient(90deg, #C04B1A, #E8A020) !important;
+    }
+    .stButton > button[kind="secondary"] {
+        border: 2px solid #C04B1A !important;
+        color: #C04B1A !important; border-radius: 8px !important;
+    }
+
+    /* Download button */
+    .stDownloadButton > button {
+        background: linear-gradient(90deg, #1A3A6B, #2B5FA0) !important;
+        color: white !important; border: none !important;
+        border-radius: 8px !important; font-weight: 700 !important;
+    }
+
+    /* File uploader */
+    [data-testid="stFileUploader"] {
+        border: 2px dashed #4A9FD4 !important;
+        border-radius: 10px !important;
+        background: #F5FAFF !important;
+    }
+
+    /* Dividers */
+    hr { border-color: #7DC0E8 !important; }
+
+    /* Info / Warning */
+    .stAlert { border-radius: 8px !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -110,13 +187,13 @@ def generate_pdf_report(patient_name, patient_age, patient_gender,
         topMargin=2*cm, bottomMargin=2*cm
     )
 
-    BLUE       = colors.HexColor("#1E3A5F")
-    LIGHT_BLUE = colors.HexColor("#2B6CB0")
-    BG_BLUE    = colors.HexColor("#EBF4FF")
-    GREEN      = colors.HexColor("#1A7A1A")
-    RED        = colors.HexColor("#CC0000")
+    BLUE       = colors.HexColor("#1A3A6B")
+    LIGHT_BLUE = colors.HexColor("#2B5FA0")
+    BG_BLUE    = colors.HexColor("#EEF4FF")
+    GREEN      = colors.HexColor("#4A9FD4")
+    RED        = colors.HexColor("#C04B1A")
     GRAY       = colors.HexColor("#666666")
-    DIVIDER    = colors.HexColor("#CCCCCC")
+    DIVIDER    = colors.HexColor("#7DC0E8")
 
     styles = getSampleStyleSheet()
 
@@ -159,13 +236,13 @@ def generate_pdf_report(patient_name, patient_age, patient_gender,
                        "The integrated analysis of both EEG brain signals and behavioral data "
                        "shows no significant ADHD-associated patterns. Routine follow-up is advised if symptoms persist.")
     elif has_eeg:
-        interp_text = ("data patterns indicate significant ADHD-associated findings."
+        interp_text = ("EEG brain signal patterns indicate significant ADHD-associated findings."
                        if meta_prob >= 0.5 else
-                       "data patterns show no significant ADHD-associated findings.")
+                       "EEG brain signal patterns show no significant ADHD-associated findings.")
     else:
-        interp_text = ("data patterns indicate significant ADHD-associated findings."
+        interp_text = ("Behavioral data patterns indicate significant ADHD-associated findings."
                        if meta_prob >= 0.5 else
-                       "data patterns show no significant ADHD-associated findings.")
+                       "Behavioral data patterns show no significant ADHD-associated findings.")
 
     diagnosis_label = "ADHD Detected" if meta_prob >= 0.5 else "No ADHD Detected"
 
@@ -188,7 +265,7 @@ def generate_pdf_report(patient_name, patient_age, patient_gender,
     story.append(Spacer(1, 0.15*cm))
     story.append(Paragraph("ADHD Diagnostic System — Patient Report", sub_style))
     story.append(Spacer(1, 0.4*cm))
-    story.append(HRFlowable(width="100%", thickness=2, color=LIGHT_BLUE))
+    story.append(HRFlowable(width="100%", thickness=3, color=colors.HexColor("#E8A020")))
     story.append(Spacer(1, 0.5*cm))
 
     # ── Patient Info ──────────────────────────────────────
@@ -320,10 +397,10 @@ elif mode == "EEG-Based ADHD Diagnosis":
                     title = {"text": "ADHD Likelihood", "font": {"size": 18}},
                     gauge = {
                         "axis"     : {"range": [0, 100]},
-                        "bar"      : {"color": "#E74C3C" if is_adhd else "#2ECC71"},
+                        "bar"      : {"color": "#C04B1A" if is_adhd else "#4A9FD4"},
                         "steps"    : [
-                            {"range": [0,  50], "color": "#D5F5E3"},
-                            {"range": [50, 100], "color": "#FADBD8"},
+                            {"range": [0,  50], "color": "#EEF6FF"},
+                            {"range": [50, 100], "color": "#FFF4EE"},
                         ],
                         "threshold": {"line": {"color": "black", "width": 3}, "value": 50}
                     }
@@ -394,10 +471,10 @@ elif mode == "Behavioral ADHD Diagnosis":
                 title = {"text": "ADHD Likelihood", "font": {"size": 18}},
                 gauge = {
                     "axis"     : {"range": [0, 100]},
-                    "bar"      : {"color": "#E74C3C" if is_adhd else "#2ECC71"},
+                    "bar"      : {"color": "#C04B1A" if is_adhd else "#4A9FD4"},
                     "steps"    : [
-                        {"range": [0,  50], "color": "#D5F5E3"},
-                        {"range": [50, 100], "color": "#FADBD8"},
+                        {"range": [0,  50], "color": "#EEF6FF"},
+                        {"range": [50, 100], "color": "#FFF4EE"},
                     ],
                     "threshold": {"line": {"color": "black", "width": 3}, "value": 50}
                 }
@@ -528,10 +605,10 @@ elif mode == "Integrated ADHD Diagnosis":
             title = {"text": "ADHD Likelihood", "font": {"size": 18}},
             gauge = {
                 "axis"     : {"range": [0, 100]},
-                "bar"      : {"color": "#E74C3C" if is_adhd else "#2ECC71"},
+                "bar"      : {"color": "#C04B1A" if is_adhd else "#4A9FD4"},
                 "steps"    : [
-                    {"range": [0,  50], "color": "#D5F5E3"},
-                    {"range": [50, 100], "color": "#FADBD8"},
+                    {"range": [0,  50], "color": "#EEF6FF"},
+                    {"range": [50, 100], "color": "#FFF4EE"},
                 ],
                 "threshold": {"line": {"color": "black", "width": 3}, "value": 50}
             }
