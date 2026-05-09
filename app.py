@@ -35,6 +35,7 @@ if "diagnosis_history" not in st.session_state:
 
 # ── Custom CSS ────────────────────────────────────────────
 
+# ── Custom CSS ────────────────────────────────────────────
 st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
@@ -42,6 +43,7 @@ st.markdown("""
     .stMarkdown, .stApp {
         font-family: 'Inter', sans-serif !important;
     }
+
     .stApp {
         background: linear-gradient(160deg, #060D1A 0%, #0A1628 50%, #0F2244 100%);
         min-height: 100vh;
@@ -51,8 +53,10 @@ st.markdown("""
         padding-bottom: 3rem;
         max-width: 1100px;
     }
+
     .stApp, .stApp p, .stApp li, .stApp span,
     .stMarkdown, .stMarkdown p { color: #C8DCFF !important; }
+
     h1 {
         color: #F5C85A !important;
         font-weight: 900 !important;
@@ -62,6 +66,7 @@ st.markdown("""
     }
     h2 { color: #7DC0E8 !important; font-weight: 700 !important; }
     h3 { color: #F5C85A !important; font-weight: 700 !important; }
+
     /* Sidebar */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #060E1C 0%, #0F2040 60%, #1A3A6B 100%) !important;
@@ -77,6 +82,7 @@ st.markdown("""
     [data-testid="stSidebar"] h2,
     [data-testid="stSidebar"] h3 { color: #F5C85A !important; }
     [data-testid="stSidebar"] hr { border-color: rgba(74,159,212,0.2) !important; }
+
     /* Glassmorphism card */
     .glass-card {
         background: rgba(255,255,255,0.04);
@@ -96,6 +102,7 @@ st.markdown("""
         margin-bottom: 1.2rem;
         box-shadow: 0 4px 24px rgba(0,0,0,0.2);
     }
+
     /* Page header banner */
     .page-header {
         background: linear-gradient(90deg, rgba(232,160,32,0.12), rgba(192,75,26,0.08));
@@ -115,6 +122,7 @@ st.markdown("""
         color: #C8DCFF !important;
         font-size: 0.9rem !important;
     }
+
     /* Section header */
     .section-header {
         display: flex; align-items: center; gap: 0.6rem;
@@ -128,6 +136,7 @@ st.markdown("""
         font-size: 0.8rem; font-weight: 700; letter-spacing: 0.1em;
         color: #E8A020 !important; text-transform: uppercase;
     }
+
     /* Cover */
     .cover-title {
         font-size: 2.6rem; font-weight: 900; text-align: center;
@@ -145,6 +154,7 @@ st.markdown("""
         font-size: 0.88rem; color: #A8C0E0 !important; text-align: center;
         max-width: 580px; margin: 0.4rem auto 1.5rem auto; line-height: 1.85;
     }
+
     /* Result boxes */
     .result-box {
         border-radius: 20px; padding: 2.2rem 2rem;
@@ -165,6 +175,7 @@ st.markdown("""
     .result-adhd .result-label { color: #E8733A; }
     .result-ctrl  .result-label { color: #7DC0E8; }
     .result-prob  { font-size: 0.95rem; color: #A8C0E0 !important; line-height: 1.7; }
+
     /* Disclaimer */
     .disclaimer-box {
         background: rgba(232,160,32,0.08);
@@ -173,6 +184,7 @@ st.markdown("""
         font-size: 0.85rem; color: #C8A84A !important;
         line-height: 1.6; margin-top: 1.5rem;
     }
+
     /* Metric cards */
     [data-testid="stMetric"] {
         background: rgba(255,255,255,0.04) !important;
@@ -187,6 +199,7 @@ st.markdown("""
     [data-testid="stMetricValue"] {
         color: #F5C85A !important; font-weight: 800 !important; font-size: 1.8rem !important;
     }
+
     /* Buttons primary */
     .stButton > button[kind="primary"] {
         background: linear-gradient(90deg, #E8A020, #C04B1A) !important;
@@ -207,6 +220,7 @@ st.markdown("""
         border: 1.5px solid rgba(232,115,58,0.6) !important;
         color: #E8733A !important; border-radius: 10px !important;
     }
+
     /* Download button */
     .stDownloadButton > button {
         background: linear-gradient(90deg, #1A3A6B, #2B5FA0) !important;
@@ -217,6 +231,82 @@ st.markdown("""
     .stDownloadButton > button:hover {
         background: linear-gradient(90deg, #2B5FA0, #4A9FD4) !important;
     }
+
+    /* ══ File uploader ══ */
+    [data-testid="stFileUploaderDropzone"] {
+        background: rgba(26,58,107,0.35) !important;
+        border: 2px dashed rgba(232,160,32,0.45) !important;
+        border-radius: 12px !important;
+        transition: all 0.2s;
+    }
+    [data-testid="stFileUploaderDropzone"]:hover {
+        border-color: rgba(245,200,90,0.7) !important;
+        background: rgba(232,160,32,0.06) !important;
+    }
+    [data-testid="stFileUploader"] * { color: #A8C0E0 !important; }
+
+    /* Browse button — hide original text, show "Upload" via ::after */
+    [data-testid="stFileUploaderDropzone"] button {
+        background: linear-gradient(90deg, #E8A020, #C04B1A) !important;
+        border: none !important;
+        border-radius: 8px !important;
+        font-weight: 700 !important;
+        padding: 0.4rem 1.1rem !important;
+        min-width: 90px !important;
+        font-size: 0 !important;
+        color: transparent !important;
+        position: relative !important;
+    }
+    [data-testid="stFileUploaderDropzone"] button:hover {
+        background: linear-gradient(90deg, #F5C85A, #E8733A) !important;
+        cursor: pointer !important;
+    }
+    /* Hide internal spans/svgs but keep the button itself clickable */
+    [data-testid="stFileUploaderDropzone"] button > span,
+    [data-testid="stFileUploaderDropzone"] button > svg,
+    [data-testid="stFileUploaderDropzone"] button > p {
+        display: none !important;
+    }
+    /* Inject clean label */
+    [data-testid="stFileUploaderDropzone"] button::after {
+        content: "Upload";
+        color: white !important;
+        font-size: 0.82rem !important;
+        font-weight: 700 !important;
+        font-family: 'Inter', sans-serif !important;
+        pointer-events: none;
+    }
+
+    /* "Add files" button → small round + button */
+    [data-testid="stFileUploader"] button[title="Add files"],
+    [data-testid="stFileUploader"] button[aria-label*="add"],
+    [data-testid="stFileUploader"] button[aria-label*="Add"] {
+        background: rgba(232,160,32,0.15) !important;
+        border: 1.5px solid rgba(232,160,32,0.5) !important;
+        border-radius: 50% !important;
+        width: 28px !important; height: 28px !important;
+        min-width: 28px !important; max-width: 28px !important;
+        padding: 0 !important;
+        font-size: 0 !important;
+        color: transparent !important;
+        position: relative !important;
+    }
+    [data-testid="stFileUploader"] button[title="Add files"] > span,
+    [data-testid="stFileUploader"] button[aria-label*="add"] > span,
+    [data-testid="stFileUploader"] button[aria-label*="Add"] > span {
+        display: none !important;
+    }
+    [data-testid="stFileUploader"] button[title="Add files"]::after,
+    [data-testid="stFileUploader"] button[aria-label*="add"]::after,
+    [data-testid="stFileUploader"] button[aria-label*="Add"]::after {
+        content: "+";
+        color: #F5C85A !important;
+        font-size: 1.2rem !important;
+        font-weight: 400 !important;
+        line-height: 1 !important;
+        pointer-events: none;
+    }
+
     /* Labels — all inputs */
     .stTextInput label, .stNumberInput label,
     .stSelectbox label, .stRadio label {
@@ -224,7 +314,23 @@ st.markdown("""
         font-size: 0.78rem !important; letter-spacing: 0.01em !important;
         text-transform: none !important;
     }
+
+    /* File uploader label */
+    [data-testid="stFileUploader"] label {
+        color: #A8C0E0 !important; font-weight: 500 !important;
+        font-size: 0.78rem !important; letter-spacing: 0 !important;
+        text-transform: none !important;
+    }
+
+    /* "200MB per file" info text */
+    [data-testid="stFileUploaderDropzone"] small,
+    [data-testid="stFileUploaderDropzone"] > div > small {
+        font-size: 0.68rem !important;
+        color: rgba(168,192,224,0.55) !important;
+    }
+
     .stMarkdown strong { color: #F5C85A !important; font-weight: 700 !important; }
+
     /* Input fields */
     .stTextInput input, .stNumberInput input {
         background: rgba(10,22,40,0.7) !important;
@@ -241,19 +347,23 @@ st.markdown("""
         border: 1.5px solid rgba(232,160,32,0.4) !important;
         border-radius: 8px !important; color: #E8F0FF !important;
     }
+
     /* Dividers */
     hr { border-color: rgba(74,159,212,0.15) !important; }
+
     /* Dataframe */
     [data-testid="stDataFrame"] {
         border-radius: 12px !important; overflow: hidden;
         border: 1px solid rgba(74,159,212,0.2) !important;
     }
+
     /* Alerts */
     .stAlert {
         border-radius: 10px !important;
         background: rgba(43,95,160,0.25) !important;
         border: 1px solid rgba(74,159,212,0.3) !important;
     }
+
     /* Scrollbar */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: rgba(10,22,40,0.5); }
