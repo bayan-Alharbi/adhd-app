@@ -198,12 +198,21 @@ st.markdown("""
         color: #E8F0FF !important;
     }
 
-    /* Subheader separator line accent */
-    h2::after {
-        content: ''; display: block;
-        width: 40px; height: 3px;
-        background: linear-gradient(90deg, #E8A020, #C04B1A);
-        border-radius: 2px; margin-top: 4px;
+    /* Page subtitle (st.markdown description line) */
+    .stApp .stMarkdown p { color: #E8C170 !important; }
+
+    /* Subheader text */
+    h3 { color: #F5C85A !important; }
+
+    /* st.markdown bold used as section labels */
+    .stMarkdown strong { color: #F5C85A !important; font-weight: 700 !important; }
+
+    /* st.subheader with 👤 and section titles */
+    [data-testid="stHeading"] h3,
+    [data-testid="stHeading"] h2 {
+        color: #F5C85A !important;
+        border-left: 4px solid #E8A020;
+        padding-left: 0.6rem;
     }
 
     /* Dividers */
@@ -452,7 +461,7 @@ if mode == "Home":
 # ══════════════════════════════════════════════════════════
 elif mode == "EEG-Based ADHD Diagnosis":
     st.title("EEG-Based ADHD Diagnosis")
-    st.markdown("Upload a brain signal file to get an AI-based ADHD diagnostic result.")
+    st.markdown("<span style='color:#E8C170;font-size:0.97rem;'>Upload a brain signal file to get an AI-based ADHD diagnostic result.</span>", unsafe_allow_html=True)
     st.markdown("---")
 
     uploaded = st.file_uploader("Upload EEG file (.mat)", type=["mat"])
@@ -531,7 +540,7 @@ elif mode == "EEG-Based ADHD Diagnosis":
 # ══════════════════════════════════════════════════════════
 elif mode == "Behavioral ADHD Diagnosis":
     st.title("Behavioral ADHD Diagnosis")
-    st.markdown("Upload a behavioral data file to get an AI-based ADHD diagnostic result.")
+    st.markdown("<span style='color:#E8C170;font-size:0.97rem;'>Upload a behavioral data file to get an AI-based ADHD diagnostic result.</span>", unsafe_allow_html=True)
     st.markdown("---")
 
     f = st.file_uploader("Upload behavioral data file (.csv)", type=["csv"])
@@ -603,11 +612,11 @@ elif mode == "Behavioral ADHD Diagnosis":
 # ══════════════════════════════════════════════════════════
 elif mode == "Integrated ADHD Diagnosis":
     st.title("Integrated ADHD Diagnosis")
-    st.markdown("Enter patient information and upload data files to generate a full diagnostic report.")
+    st.markdown("<span style='color:#E8C170;font-size:0.97rem;'>Enter patient information and upload data files to generate a full diagnostic report.</span>", unsafe_allow_html=True)
     st.markdown("---")
 
     # ── Patient Info ──────────────────────────────────────
-    st.subheader("👤 Patient Information")
+    st.markdown("<h3 style='color:#F5C85A;border-left:4px solid #E8A020;padding-left:0.6rem;margin-bottom:1rem;'>👤 Patient Information</h3>", unsafe_allow_html=True)
     pi1, pi2, pi3 = st.columns(3)
     with pi1:
         patient_name   = st.text_input("Full Name", placeholder="e.g. Ahmed Al-Rashidi")
@@ -619,13 +628,13 @@ elif mode == "Integrated ADHD Diagnosis":
     st.markdown("---")
 
     # ── File Upload ───────────────────────────────────────
-    st.subheader("Upload Data Files")
+    st.markdown("<h3 style='color:#F5C85A;border-left:4px solid #E8A020;padding-left:0.6rem;margin-bottom:1rem;'>Upload Data Files</h3>", unsafe_allow_html=True)
     col_eeg, col_hyp = st.columns(2)
     with col_eeg:
-        st.markdown("**EEG File**")
+        st.markdown("<span style='color:#F5C85A;font-weight:700;font-size:1rem;'>EEG File</span>", unsafe_allow_html=True)
         eeg_file = st.file_uploader("Upload .mat file", type=["mat"], key="meta_eeg")
     with col_hyp:
-        st.markdown("**Behavioral Data File**")
+        st.markdown("<span style='color:#F5C85A;font-weight:700;font-size:1rem;'>Behavioral Data File</span>", unsafe_allow_html=True)
         hyp_file = st.file_uploader("Upload .csv file", type=["csv"], key="meta_hyp")
 
     st.markdown("---")
@@ -677,7 +686,7 @@ elif mode == "Integrated ADHD Diagnosis":
 
     # ── Integrated Decision ───────────────────────────────
     if p_eeg is not None or p_hyp is not None:
-        st.subheader("Diagnostic Result")
+        st.markdown("<h3 style='color:#F5C85A;border-left:4px solid #E8A020;padding-left:0.6rem;margin-bottom:1rem;'>Diagnostic Result</h3>", unsafe_allow_html=True)
 
         x_meta = np.array([[
             p_eeg  if p_eeg is not None else 0.5,
@@ -743,7 +752,7 @@ elif mode == "Integrated ADHD Diagnosis":
 
         # ── PDF Download ──────────────────────────────────
         st.markdown("---")
-        st.subheader("Download Patient Report")
+        st.markdown("<h3 style='color:#F5C85A;border-left:4px solid #E8A020;padding-left:0.6rem;margin-bottom:1rem;'>Download Patient Report</h3>", unsafe_allow_html=True)
 
         if not patient_name.strip():
             st.warning("Please enter the patient's name to generate the report.")
