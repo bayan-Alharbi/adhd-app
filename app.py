@@ -37,19 +37,15 @@ if "diagnosis_history" not in st.session_state:
 st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-    /* ── Brand Palette ──────────────────────────────────
-       Gold     #E8A020   Light Gold  #F5C85A
-       Rust     #C04B1A   Light Rust  #E8733A
-       Sky      #4A9FD4   Light Sky   #7DC0E8
-       Navy     #1A3A6B   Mid Navy    #2B5FA0
-    ── ─────────────────────────────────────────────── */
+    /* ── FIX 1: Font — targeted selectors instead of wildcard * ── */
+    body, p, div, span, label, input, select, textarea,
+    .stMarkdown, .stApp {
+        font-family: 'Inter', sans-serif !important;
+    }
 
-    /* Font */
-    * { font-family: 'Inter', sans-serif !important; }
-
-    /* Main background */
+    /* ── FIX 4: Darker main background ── */
     .stApp {
-        background: linear-gradient(160deg, #0A1628 0%, #0F2040 40%, #1A3A6B 100%);
+        background: linear-gradient(160deg, #060D1A 0%, #0A1628 50%, #0F2244 100%);
         min-height: 100vh;
     }
     .main .block-container {
@@ -347,6 +343,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+
 @st.cache_resource
 def load_models():
     cnn  = ort.InferenceSession("models/cnn_eeg_model.onnx")
@@ -402,8 +399,10 @@ def transparent_gauge_layout(height=320):
 def generate_pdf_report(patient_name, patient_age, patient_gender,
                          p_eeg, p_hyp, meta_prob, has_eeg, has_hyp):
     buffer = io.BytesIO()
+
     doc = SimpleDocTemplate(
-        buffer, pagesize=A4,
+        buffer,
+        pagesize=A4,
         rightMargin=2*cm, leftMargin=2*cm,
         topMargin=2*cm, bottomMargin=2*cm
     )
@@ -421,20 +420,31 @@ def generate_pdf_report(patient_name, patient_age, patient_gender,
     title_style = ParagraphStyle("title_s", parent=styles["Normal"],
         fontSize=24, textColor=BLUE, alignment=TA_CENTER,
         fontName="Helvetica-Bold", spaceAfter=6)
+
     sub_style = ParagraphStyle("sub_s", parent=styles["Normal"],
         fontSize=12, textColor=LIGHT_BLUE, alignment=TA_CENTER,
         fontName="Helvetica", spaceAfter=0)
+
     section_style = ParagraphStyle("sec_s", parent=styles["Normal"],
         fontSize=13, textColor=BLUE, fontName="Helvetica-Bold",
         spaceBefore=14, spaceAfter=6)
+
+    body_style = ParagraphStyle("body_s", parent=styles["Normal"],
+        fontSize=10, textColor=colors.HexColor("#333333"),
+        fontName="Helvetica", leading=16)
+
     small_style = ParagraphStyle("small_s", parent=styles["Normal"],
-        fontSize=9, textColor=GRAY, fontName="Helvetica", alignment=TA_CENTER)
+        fontSize=9, textColor=GRAY, fontName="Helvetica",
+        alignment=TA_CENTER)
+
     diag_style = ParagraphStyle("diag", parent=styles["Normal"],
         fontSize=20, textColor=RED if meta_prob >= 0.5 else GREEN,
         fontName="Helvetica-Bold", alignment=TA_CENTER, spaceAfter=6)
+
     prob_style = ParagraphStyle("prob", parent=styles["Normal"],
         fontSize=13, textColor=GRAY, fontName="Helvetica",
         alignment=TA_CENTER, spaceAfter=8)
+
     interp_style = ParagraphStyle("interp", parent=styles["Normal"],
         fontSize=10, textColor=colors.HexColor("#444444"),
         fontName="Helvetica", alignment=TA_CENTER, leading=15)
@@ -455,11 +465,14 @@ def generate_pdf_report(patient_name, patient_age, patient_gender,
                        "Behavioral data patterns show no significant ADHD-associated findings.")
 
     diagnosis_label = "ADHD Detected" if meta_prob >= 0.5 else "No ADHD Detected"
+
     now      = datetime.now()
     date_str = now.strftime("%B %d, %Y")
     time_str = now.strftime("%I:%M %p")
+
     story = []
 
+    # ── Logo ─────────────────────────────────────────────
     logo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cortex_logo.png")
     if os.path.exists(logo_path):
         logo = RLImage(logo_path, width=3*cm, height=3*cm)
@@ -467,6 +480,7 @@ def generate_pdf_report(patient_name, patient_age, patient_gender,
         story.append(logo)
         story.append(Spacer(1, 0.4*cm))
 
+    # ── Header ────────────────────────────────────────────
     story.append(Paragraph("Cortex", title_style))
     story.append(Spacer(1, 0.15*cm))
     story.append(Paragraph("ADHD Diagnostic System — Patient Report", sub_style))
@@ -474,6 +488,7 @@ def generate_pdf_report(patient_name, patient_age, patient_gender,
     story.append(HRFlowable(width="100%", thickness=2, color=LIGHT_BLUE))
     story.append(Spacer(1, 0.5*cm))
 
+    # ── Patient Info ──────────────────────────────────────
     story.append(Paragraph("Patient Information", section_style))
     patient_data = [
         ["Full Name",   patient_name],
@@ -498,6 +513,7 @@ def generate_pdf_report(patient_name, patient_age, patient_gender,
     story.append(pt)
     story.append(Spacer(1, 0.6*cm))
 
+    # ── Diagnosis Result ──────────────────────────────────
     story.append(HRFlowable(width="100%", thickness=0.5, color=DIVIDER))
     story.append(Spacer(1, 0.5*cm))
     story.append(Paragraph("Diagnosis Result", section_style))
@@ -509,6 +525,7 @@ def generate_pdf_report(patient_name, patient_age, patient_gender,
     story.append(Paragraph(interp_text, interp_style))
     story.append(Spacer(1, 0.6*cm))
 
+    # ── Disclaimer ────────────────────────────────────────
     story.append(HRFlowable(width="100%", thickness=1, color=DIVIDER))
     story.append(Spacer(1, 0.3*cm))
     disclaimer = ("This report is generated by the Cortex AI Diagnostic System, "
@@ -566,7 +583,8 @@ elif mode == "EEG-Based ADHD Diagnosis":
     <p>Upload a brain signal file to receive an AI-based ADHD diagnostic result.</p>
     </div>""", unsafe_allow_html=True)
 
-    uploaded = st.file_uploader("EEG File (.mat)", type=["mat"])
+    # FIX 3: label merged into uploader text
+    uploaded = st.file_uploader("EEG File — Upload .mat", type=["mat"])
     if uploaded:
         import scipy.io, tempfile
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mat") as tmp:
@@ -591,6 +609,7 @@ elif mode == "EEG-Based ADHD Diagnosis":
                 mean_prob = probs.mean()
                 is_adhd   = mean_prob >= 0.5
 
+                # FIX 2: Transparent gauge background
                 fig_g = go.Figure(go.Indicator(
                     mode  = "gauge+number",
                     value = mean_prob * 100,
@@ -647,7 +666,8 @@ elif mode == "Behavioral ADHD Diagnosis":
     <p>Upload a behavioral data file to receive an AI-based ADHD diagnostic result.</p>
     </div>""", unsafe_allow_html=True)
 
-    f = st.file_uploader("Behavioral Data File (.csv)", type=["csv"])
+    # FIX 3: label merged into uploader text
+    f = st.file_uploader("Behavioral Data File — Upload .csv", type=["csv"])
     if f:
         try:
             df_in = pd.read_csv(f, sep=";").fillna(0)
@@ -666,6 +686,7 @@ elif mode == "Behavioral ADHD Diagnosis":
             mean_prob  = float(meta_probs.mean())
             is_adhd    = mean_prob >= 0.5
 
+            # FIX 2: Transparent gauge background
             fig_g = go.Figure(go.Indicator(
                 mode  = "gauge+number",
                 value = mean_prob * 100,
@@ -718,8 +739,31 @@ elif mode == "Integrated ADHD Diagnosis":
     <h1>Integrated ADHD Diagnosis</h1>
     <p>Enter patient information and upload data files to generate a full diagnostic report.</p>
     </div>""", unsafe_allow_html=True)
+    st.markdown("""<div class="steps-bar">
+      <div class="step-item">
+        <div class="step-circle active">1</div>
+        <div class="step-label">Patient Info</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step-item">
+        <div class="step-circle active">2</div>
+        <div class="step-label">Upload Data</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step-item">
+        <div class="step-circle active">3</div>
+        <div class="step-label">Diagnosis</div>
+      </div>
+      <div class="step-line"></div>
+      <div class="step-item">
+        <div class="step-circle active">4</div>
+        <div class="step-label">Report</div>
+      </div>
+    </div>""", unsafe_allow_html=True)
 
-    st.markdown("<h3 style='color:#F5C85A;margin-bottom:0.8rem;margin-top:0.2rem;letter-spacing:-0.01em;'>👤 Patient Information</h3>", unsafe_allow_html=True)
+    # ── Patient Info ──────────────────────────────────────
+    st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color:#F5C85A;margin-bottom:1rem;letter-spacing:-0.01em;'>👤 Patient Information</h3>", unsafe_allow_html=True)
     pi1, pi2, pi3 = st.columns(3)
     with pi1:
         patient_name   = st.text_input("Full Name", placeholder="e.g. Ahmed Al-Rashidi")
@@ -727,22 +771,19 @@ elif mode == "Integrated ADHD Diagnosis":
         patient_age    = st.number_input("Age", min_value=1, max_value=120, value=25)
     with pi3:
         patient_gender = st.selectbox("Gender", ["Male", "Female"])
+    st.markdown("</div>", unsafe_allow_html=True)
 
-    st.markdown("""
-    <div style="
-        height: 4px;
-        background: linear-gradient(90deg, #E8A020 0%, #C04B1A 40%, rgba(74,159,212,0.3) 100%);
-        border-radius: 4px;
-        margin: 1.2rem 0;
-        box-shadow: 0 2px 12px rgba(232,160,32,0.25);
-    "></div>""", unsafe_allow_html=True)
-
-    st.markdown("<h3 style='color:#F5C85A;margin-bottom:0.8rem;letter-spacing:-0.01em;'>Upload Data Files</h3>", unsafe_allow_html=True)
+    st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color:#F5C85A;margin-bottom:1rem;letter-spacing:-0.01em;'>Upload Data Files</h3>", unsafe_allow_html=True)
     col_eeg, col_hyp = st.columns(2)
+
+    # FIX 3: labels merged into uploader text — removes the stacked-label overlap
     with col_eeg:
-        eeg_file = st.file_uploader("EEG File (.mat)", type=["mat"], key="meta_eeg")
+        eeg_file = st.file_uploader("EEG File — Upload .mat", type=["mat"], key="meta_eeg")
     with col_hyp:
-        hyp_file = st.file_uploader("Behavioral Data File (.csv)", type=["csv"], key="meta_hyp")
+        hyp_file = st.file_uploader("Behavioral Data File — Upload .csv", type=["csv"], key="meta_hyp")
+
+    st.markdown("</div>", unsafe_allow_html=True)
 
     p_eeg   = None
     p_hyp   = None
@@ -789,6 +830,7 @@ elif mode == "Integrated ADHD Diagnosis":
         except Exception as e:
             st.error(f"Behavioral Data Error: {e}")
 
+    # ── Integrated Decision ───────────────────────────────
     if p_eeg is not None or p_hyp is not None:
         st.markdown("<h3 style='color:#F5C85A;border-left:4px solid #E8A020;padding-left:0.6rem;margin-bottom:1rem;'>Diagnostic Result</h3>", unsafe_allow_html=True)
 
@@ -800,6 +842,7 @@ elif mode == "Integrated ADHD Diagnosis":
         meta_prob = meta_model.predict_proba(x_meta)[0, 1]
         is_adhd   = meta_prob >= 0.5
 
+        # FIX 2: Transparent gauge background
         fig_g = go.Figure(go.Indicator(
             mode  = "gauge+number",
             value = meta_prob * 100,
@@ -824,7 +867,7 @@ elif mode == "Integrated ADHD Diagnosis":
             <div class="result-box result-adhd">
                 <div class="result-label">🔴 ADHD Detected</div>
                 <div class="result-prob">Integrated model probability: {meta_prob:.1%}</div>
-                <div class="result-prob" style="margin-top:0.6rem;font-size:0.92rem;color:#ccc;">
+                <div class="result-prob" style="margin-top:0.6rem;font-size:0.92rem;color:#444;">
                     The combined analysis of available data indicates significant ADHD-associated patterns.
                     Further clinical evaluation is recommended to confirm this finding.
                 </div>
@@ -834,12 +877,13 @@ elif mode == "Integrated ADHD Diagnosis":
             <div class="result-box result-ctrl">
                 <div class="result-label">🟢 No ADHD Detected</div>
                 <div class="result-prob">Integrated model probability: {meta_prob:.1%}</div>
-                <div class="result-prob" style="margin-top:0.6rem;font-size:0.92rem;color:#ccc;">
+                <div class="result-prob" style="margin-top:0.6rem;font-size:0.92rem;color:#444;">
                     The combined analysis of available data shows no significant ADHD-associated patterns.
                     Routine follow-up is advised if clinical symptoms persist.
                 </div>
             </div>""", unsafe_allow_html=True)
 
+        # ── Save to History ───────────────────────────────
         st.session_state.diagnosis_history.append({
             "Date":      datetime.now().strftime("%Y-%m-%d"),
             "Time":      datetime.now().strftime("%H:%M:%S"),
@@ -852,6 +896,7 @@ elif mode == "Integrated ADHD Diagnosis":
             "Diagnosis": "ADHD" if is_adhd else "Control",
         })
 
+        # ── PDF Download ──────────────────────────────────
         st.markdown("---")
         st.markdown("<h3 style='color:#F5C85A;border-left:4px solid #E8A020;padding-left:0.6rem;margin-bottom:1rem;'>Download Patient Report</h3>", unsafe_allow_html=True)
 
@@ -898,7 +943,7 @@ elif mode == "History":
         df_history = pd.DataFrame(st.session_state.diagnosis_history)
 
         total  = len(df_history)
-        adhd_n = (df_history["Diagnosis"] == "ADHD").sum()
+        adhd_n = (df_history["Diagnosis"] == "ADHD 🔴").sum()
         ctrl_n = total - adhd_n
 
         c1, c2, c3 = st.columns(3)
