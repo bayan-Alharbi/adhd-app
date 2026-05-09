@@ -125,54 +125,74 @@ st.markdown("""
         font-size: 0.9rem !important;
     }
 
-    /* ── Progress steps — vertical card ────────────── */
-    .steps-bar {
+    /* ── Progress steps — fixed vertical timeline ───── */
+    .steps-wrapper {
+        position: fixed;
+        right: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 999;
         display: flex;
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
         gap: 0;
-        margin: 0 0 1.6rem 0;
-        padding: 1rem 1.2rem;
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(125,192,232,0.12);
-        border-radius: 14px;
-        width: fit-content;
-        float: right;
-        clear: both;
+        padding: 1rem 0.8rem;
+        background: rgba(6,13,26,0.75);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(232,160,32,0.2);
+        border-radius: 50px;
+        box-shadow: 0 4px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(232,160,32,0.08);
     }
+    .steps-bar { display: contents; }
     .step-item {
-        display: flex; flex-direction: row; align-items: center;
-        gap: 0.7rem;
+        display: flex; flex-direction: column; align-items: center;
+        gap: 0;
     }
     .step-circle {
-        width: 30px; height: 30px; border-radius: 50%;
+        width: 34px; height: 34px; border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
         font-weight: 800; font-size: 0.78rem;
-        border: 2px solid rgba(125,192,232,0.3);
-        background: rgba(26,58,107,0.6);
+        border: 2px solid rgba(125,192,232,0.25);
+        background: rgba(26,58,107,0.7);
         color: #7DC0E8;
         flex-shrink: 0;
         transition: all 0.3s;
+        cursor: default;
+        position: relative;
     }
+    .step-circle::after {
+        content: attr(data-label);
+        position: absolute;
+        right: 44px;
+        background: rgba(6,13,26,0.92);
+        color: #F5C85A;
+        font-size: 0.72rem;
+        font-weight: 600;
+        white-space: nowrap;
+        padding: 3px 8px;
+        border-radius: 6px;
+        border: 1px solid rgba(232,160,32,0.25);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s;
+    }
+    .step-circle:hover::after { opacity: 1; }
     .step-circle.active {
         background: linear-gradient(135deg, #E8A020, #C04B1A);
         border-color: #E8A020;
         color: white;
-        box-shadow: 0 0 14px rgba(232,160,32,0.45);
+        box-shadow: 0 0 14px rgba(232,160,32,0.5);
     }
     .step-circle.done {
         background: rgba(74,159,212,0.2);
         border-color: #4A9FD4;
         color: #4A9FD4;
     }
-    .step-label {
-        font-size: 0.78rem; color: #A8C0E0 !important;
-        white-space: nowrap; font-weight: 500;
-    }
+    .step-label { display: none; }
     .step-line {
-        width: 2px; height: 18px;
-        background: linear-gradient(180deg, rgba(232,160,32,0.5), rgba(125,192,232,0.15));
-        margin: 2px 0 2px 14px;
+        width: 2px; height: 20px;
+        background: linear-gradient(180deg, rgba(232,160,32,0.4), rgba(125,192,232,0.15));
+        margin: 3px 0;
     }
 
     /* ── Section header ─────────────────────────────── */
@@ -772,32 +792,26 @@ elif mode == "Integrated ADHD Diagnosis":
     <h1>Integrated ADHD Diagnosis</h1>
     <p>Enter patient information and upload data files to generate a full diagnostic report.</p>
     </div>""", unsafe_allow_html=True)
-    st.markdown("""<div class="steps-bar">
+    st.markdown("""<div class="steps-wrapper">
       <div class="step-item">
-        <div class="step-circle active">1</div>
-        <div class="step-label">Patient Info</div>
+        <div class="step-circle active" data-label="Patient Info">1</div>
       </div>
       <div class="step-line"></div>
       <div class="step-item">
-        <div class="step-circle active">2</div>
-        <div class="step-label">Upload Data</div>
+        <div class="step-circle active" data-label="Upload Data">2</div>
       </div>
       <div class="step-line"></div>
       <div class="step-item">
-        <div class="step-circle active">3</div>
-        <div class="step-label">Diagnosis</div>
+        <div class="step-circle active" data-label="Diagnosis">3</div>
       </div>
       <div class="step-line"></div>
       <div class="step-item">
-        <div class="step-circle active">4</div>
-        <div class="step-label">Report</div>
+        <div class="step-circle active" data-label="Report">4</div>
       </div>
-    </div>
-    <div style="clear:both"></div>""", unsafe_allow_html=True)
+    </div>""", unsafe_allow_html=True)
 
     # ── Patient Info ──────────────────────────────────────
-    st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
-    st.markdown("<h3 style='color:#F5C85A;margin-bottom:1rem;letter-spacing:-0.01em;'>👤 Patient Information</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color:#F5C85A;margin-bottom:0.8rem;margin-top:0.2rem;letter-spacing:-0.01em;'>👤 Patient Information</h3>", unsafe_allow_html=True)
     pi1, pi2, pi3 = st.columns(3)
     with pi1:
         patient_name   = st.text_input("Full Name", placeholder="e.g. Ahmed Al-Rashidi")
@@ -805,19 +819,16 @@ elif mode == "Integrated ADHD Diagnosis":
         patient_age    = st.number_input("Age", min_value=1, max_value=120, value=25)
     with pi3:
         patient_gender = st.selectbox("Gender", ["Male", "Female"])
-    st.markdown("</div>", unsafe_allow_html=True)
-
     st.markdown("""
     <div style="
         height: 4px;
         background: linear-gradient(90deg, #E8A020 0%, #C04B1A 40%, rgba(74,159,212,0.3) 100%);
         border-radius: 4px;
-        margin: 0.4rem 0 1.2rem 0;
+        margin: 1.2rem 0;
         box-shadow: 0 2px 12px rgba(232,160,32,0.25);
     "></div>""", unsafe_allow_html=True)
 
-    st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
-    st.markdown("<h3 style='color:#F5C85A;margin-bottom:1rem;letter-spacing:-0.01em;'>Upload Data Files</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color:#F5C85A;margin-bottom:0.8rem;letter-spacing:-0.01em;'>Upload Data Files</h3>", unsafe_allow_html=True)
     col_eeg, col_hyp = st.columns(2)
 
     # FIX 3: labels merged into uploader text — removes the stacked-label overlap
@@ -825,8 +836,6 @@ elif mode == "Integrated ADHD Diagnosis":
         eeg_file = st.file_uploader("EEG File — Upload .mat", type=["mat"], key="meta_eeg")
     with col_hyp:
         hyp_file = st.file_uploader("Behavioral Data File — Upload .csv", type=["csv"], key="meta_hyp")
-
-    st.markdown("</div>", unsafe_allow_html=True)
 
     p_eeg   = None
     p_hyp   = None
