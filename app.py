@@ -249,16 +249,15 @@ st.markdown("""
         border: none !important;
         border-radius: 8px !important;
         padding: 0.4rem 1.1rem !important;
-        color: transparent !important;
-        font-size: 0 !important;
     }
     [data-testid="stFileUploaderDropzone"] button:hover {
         background: linear-gradient(90deg, #F5C85A, #E8733A) !important;
         cursor: pointer !important;
     }
-    [data-testid="stFileUploaderDropzone"] button span {
-        font-size: 0 !important;
-        color: transparent !important;
+    [data-testid="stFileUploaderDropzone"] button span,
+    [data-testid="stFileUploaderDropzone"] button div,
+    [data-testid="stFileUploaderDropzone"] button p {
+        display: none !important;
     }
     [data-testid="stFileUploaderDropzone"] button::after {
         content: "Upload";
@@ -266,6 +265,7 @@ st.markdown("""
         font-size: 0.82rem !important;
         font-weight: 700 !important;
         font-family: 'Inter', sans-serif !important;
+        display: inline-block !important;
     }
 
     /* Labels — all inputs */
