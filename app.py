@@ -24,7 +24,6 @@ from reportlab.lib.enums import TA_CENTER, TA_LEFT
 warnings.filterwarnings("ignore")
 
 st.set_page_config(
-
     page_title="Cortex — ADHD Diagnostic System",
     page_icon="🧠",
     layout="wide"
@@ -44,9 +43,9 @@ st.markdown("""
        Navy     #1A3A6B   Mid Navy    #2B5FA0
     ── ─────────────────────────────────────────────── */
 
-    /* Main background */
+    /* Main background — أغمق */
     .stApp {
-        background: linear-gradient(160deg, #0D1F3C 0%, #1A3A6B 50%, #0D2744 100%);
+        background: linear-gradient(160deg, #060E1F 0%, #0D2040 50%, #060E1F 100%);
     }
     .main .block-container { padding-top: 2rem; }
 
@@ -59,10 +58,10 @@ st.markdown("""
     h2 { color: #7DC0E8 !important; }
     h3 { color: #7DC0E8 !important; }
 
-    /* Sidebar */
+    /* Sidebar — أغمق */
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #0A1628 0%, #1A3A6B 100%) !important;
-        border-right: 1px solid #2B5FA0;
+        background: linear-gradient(180deg, #04080F 0%, #0D2040 100%) !important;
+        border-right: 1px solid #1A3A6B;
     }
     [data-testid="stSidebar"] * { color: #E8F0FF !important; }
     [data-testid="stSidebar"] .stRadio label {
@@ -71,7 +70,52 @@ st.markdown("""
     [data-testid="stSidebar"] h1,
     [data-testid="stSidebar"] h2,
     [data-testid="stSidebar"] h3 { color: #F5C85A !important; }
-    [data-testid="stSidebar"] hr { border-color: #2B5FA0 !important; }
+    [data-testid="stSidebar"] hr {
+        border: none !important;
+        height: 2px !important;
+        background: linear-gradient(90deg,
+            #F5C85A 0%,
+            #E8A020 25%,
+            #C04B1A 55%,
+            #3A2A1A 80%,
+            #060E1F 100%
+        ) !important;
+        opacity: 1 !important;
+        margin: 1rem 0 !important;
+        border-radius: 2px !important;
+    }
+
+    /* ── Gradient Divider class ───────────────────────── */
+    .gradient-divider {
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg,
+            #F5C85A 0%,
+            #E8A020 25%,
+            #C04B1A 55%,
+            #3A2A1A 80%,
+            #060E1F 100%
+        );
+        border: none;
+        margin: 1.2rem 0;
+        border-radius: 2px;
+    }
+
+    /* Override default Streamlit hr with gradient */
+    hr {
+        border: none !important;
+        height: 2px !important;
+        background: linear-gradient(90deg,
+            #F5C85A 0%,
+            #E8A020 25%,
+            #C04B1A 55%,
+            #3A2A1A 80%,
+            #060E1F 100%
+        ) !important;
+        opacity: 1 !important;
+        margin: 1.2rem 0 !important;
+        border-radius: 2px !important;
+    }
 
     /* Cover page */
     .cover-title {
@@ -145,7 +189,7 @@ st.markdown("""
 
     /* File uploader */
     [data-testid="stFileUploader"] {
-        background: rgba(26,58,107,0.6) !important;
+        background: rgba(6,14,31,0.6) !important;
         border: 2px dashed #4A9FD4 !important;
         border-radius: 10px !important;
     }
@@ -162,7 +206,7 @@ st.markdown("""
 
     /* Upload dropzone */
     [data-testid="stFileUploaderDropzone"] {
-        background: rgba(26,58,107,0.5) !important;
+        background: rgba(6,14,31,0.5) !important;
         border: 2px dashed #E8A020 !important;
         border-radius: 10px !important;
     }
@@ -180,7 +224,7 @@ st.markdown("""
 
     /* Input fields */
     .stTextInput input, .stNumberInput input {
-        background: rgba(13,31,60,0.8) !important;
+        background: rgba(6,14,31,0.9) !important;
         color: #E8F0FF !important;
         border: 1.5px solid #E8A020 !important;
         border-radius: 8px !important;
@@ -192,22 +236,22 @@ st.markdown("""
 
     /* Selectbox */
     [data-baseweb="select"] > div {
-        background: rgba(13,31,60,0.8) !important;
+        background: rgba(6,14,31,0.9) !important;
         border: 1.5px solid #E8A020 !important;
         border-radius: 8px !important;
         color: #E8F0FF !important;
     }
 
-    /* Page subtitle (st.markdown description line) */
+    /* Page subtitle */
     .stApp .stMarkdown p { color: #E8C170 !important; }
 
     /* Subheader text */
     h3 { color: #F5C85A !important; }
 
-    /* st.markdown bold used as section labels */
+    /* st.markdown bold */
     .stMarkdown strong { color: #F5C85A !important; font-weight: 700 !important; }
 
-    /* st.subheader with 👤 and section titles */
+    /* st.subheader section titles */
     [data-testid="stHeading"] h3,
     [data-testid="stHeading"] h2 {
         color: #F5C85A !important;
@@ -215,12 +259,9 @@ st.markdown("""
         padding-left: 0.6rem;
     }
 
-    /* Dividers */
-    hr { border-color: #2B5FA0 !important; opacity: 0.6; }
-
     /* Dataframe */
     [data-testid="stDataFrame"] {
-        background: rgba(13,31,60,0.8) !important;
+        background: rgba(6,14,31,0.8) !important;
         border-radius: 8px;
     }
 
@@ -416,8 +457,6 @@ def generate_pdf_report(patient_name, patient_age, patient_gender,
     return buffer
 
 
-
-
 # ══════════════════════════════════════════════════════════
 # SIDEBAR
 # ══════════════════════════════════════════════════════════
@@ -437,7 +476,6 @@ mode = st.sidebar.radio("Navigation", [
 # Page 0 — Home / Cover
 # ══════════════════════════════════════════════════════════
 if mode == "Home":
-    # ── Logo centered ─────────────────────────────────────
     col_l, col_c, col_r = st.columns([1, 2, 1])
     with col_c:
         logo_path = os.path.join(os.path.dirname(__file__), "cortex_logo.png")
@@ -446,6 +484,7 @@ if mode == "Home":
 
     st.markdown('<div class="cover-title">Cortex</div>', unsafe_allow_html=True)
     st.markdown('<div class="cover-sub">AI-Powered ADHD Diagnostic System</div>', unsafe_allow_html=True)
+    st.markdown('<div class="gradient-divider"></div>', unsafe_allow_html=True)
     st.markdown("""
     <div class="cover-desc">
         Cortex is an AI-powered diagnostic system designed to improve the accuracy and speed
@@ -462,7 +501,7 @@ if mode == "Home":
 elif mode == "EEG-Based ADHD Diagnosis":
     st.title("EEG-Based ADHD Diagnosis")
     st.markdown("<span style='color:#E8C170;font-size:0.97rem;'>Upload a brain signal file to get an AI-based ADHD diagnostic result.</span>", unsafe_allow_html=True)
-    st.markdown("---")
+    st.markdown('<div class="gradient-divider"></div>', unsafe_allow_html=True)
 
     uploaded = st.file_uploader("Upload EEG file (.mat)", type=["mat"])
     if uploaded:
@@ -541,7 +580,7 @@ elif mode == "EEG-Based ADHD Diagnosis":
 elif mode == "Behavioral ADHD Diagnosis":
     st.title("Behavioral ADHD Diagnosis")
     st.markdown("<span style='color:#E8C170;font-size:0.97rem;'>Upload a behavioral data file to get an AI-based ADHD diagnostic result.</span>", unsafe_allow_html=True)
-    st.markdown("---")
+    st.markdown('<div class="gradient-divider"></div>', unsafe_allow_html=True)
 
     f = st.file_uploader("Upload behavioral data file (.csv)", type=["csv"])
     if f:
@@ -562,7 +601,6 @@ elif mode == "Behavioral ADHD Diagnosis":
             mean_prob  = float(meta_probs.mean())
             is_adhd    = mean_prob >= 0.5
 
-            # ── Gauge ─────────────────────────────────────
             fig_g = go.Figure(go.Indicator(
                 mode  = "gauge+number",
                 value = mean_prob * 100,
@@ -581,7 +619,6 @@ elif mode == "Behavioral ADHD Diagnosis":
             fig_g.update_layout(height=320, template="plotly_white")
             st.plotly_chart(fig_g, use_container_width=True)
 
-            # ── Result card ───────────────────────────────
             if is_adhd:
                 st.markdown(f"""
                 <div class="result-box result-adhd">
@@ -613,7 +650,9 @@ elif mode == "Behavioral ADHD Diagnosis":
 elif mode == "Integrated ADHD Diagnosis":
     st.title("Integrated ADHD Diagnosis")
     st.markdown("<span style='color:#E8C170;font-size:0.97rem;'>Enter patient information and upload data files to generate a full diagnostic report.</span>", unsafe_allow_html=True)
-    st.markdown("---")
+
+    # خط تدرج تحت العنوان
+    st.markdown('<div class="gradient-divider"></div>', unsafe_allow_html=True)
 
     # ── Patient Info ──────────────────────────────────────
     st.markdown("<h3 style='color:#F5C85A;border-left:4px solid #E8A020;padding-left:0.6rem;margin-bottom:1rem;'>👤 Patient Information</h3>", unsafe_allow_html=True)
@@ -625,7 +664,8 @@ elif mode == "Integrated ADHD Diagnosis":
     with pi3:
         patient_gender = st.selectbox("Gender", ["Male", "Female"])
 
-    st.markdown("---")
+    # خط تدرج يفصل بين معلومات المريض ورفع البيانات
+    st.markdown('<div class="gradient-divider"></div>', unsafe_allow_html=True)
 
     # ── File Upload ───────────────────────────────────────
     st.markdown("<h3 style='color:#F5C85A;border-left:4px solid #E8A020;padding-left:0.6rem;margin-bottom:1rem;'>Upload Data Files</h3>", unsafe_allow_html=True)
@@ -637,7 +677,8 @@ elif mode == "Integrated ADHD Diagnosis":
         st.markdown("<span style='color:#F5C85A;font-weight:700;font-size:1rem;'>Behavioral Data File</span>", unsafe_allow_html=True)
         hyp_file = st.file_uploader("Upload .csv file", type=["csv"], key="meta_hyp")
 
-    st.markdown("---")
+    # خط تدرج قبل النتيجة
+    st.markdown('<div class="gradient-divider"></div>', unsafe_allow_html=True)
 
     p_eeg   = None
     p_hyp   = None
@@ -696,7 +737,6 @@ elif mode == "Integrated ADHD Diagnosis":
         meta_prob = meta_model.predict_proba(x_meta)[0, 1]
         is_adhd   = meta_prob >= 0.5
 
-        # ── Gauge ─────────────────────────────────────────
         fig_g = go.Figure(go.Indicator(
             mode  = "gauge+number",
             value = meta_prob * 100,
@@ -715,7 +755,6 @@ elif mode == "Integrated ADHD Diagnosis":
         fig_g.update_layout(height=340, template="plotly_white")
         st.plotly_chart(fig_g, use_container_width=True)
 
-        # ── Result card ───────────────────────────────────
         if is_adhd:
             st.markdown(f"""
             <div class="result-box result-adhd">
@@ -751,7 +790,7 @@ elif mode == "Integrated ADHD Diagnosis":
         })
 
         # ── PDF Download ──────────────────────────────────
-        st.markdown("---")
+        st.markdown('<div class="gradient-divider"></div>', unsafe_allow_html=True)
         st.markdown("<h3 style='color:#F5C85A;border-left:4px solid #E8A020;padding-left:0.6rem;margin-bottom:1rem;'>Download Patient Report</h3>", unsafe_allow_html=True)
 
         if not patient_name.strip():
@@ -787,14 +826,13 @@ elif mode == "Integrated ADHD Diagnosis":
 elif mode == "History":
     st.title("Diagnosis History")
     st.markdown("Records are saved for this session only and will be cleared when the app is closed.")
-    st.markdown("---")
+    st.markdown('<div class="gradient-divider"></div>', unsafe_allow_html=True)
 
     if not st.session_state.diagnosis_history:
         st.info("No diagnoses recorded yet. Run a META Fusion diagnosis to start.")
     else:
         df_history = pd.DataFrame(st.session_state.diagnosis_history)
 
-        # ── Summary metrics ───────────────────────────────
         total  = len(df_history)
         adhd_n = (df_history["Diagnosis"] == "ADHD 🔴").sum()
         ctrl_n = total - adhd_n
@@ -804,13 +842,11 @@ elif mode == "History":
         c2.metric("ADHD Detected",   int(adhd_n))
         c3.metric("Control",         int(ctrl_n))
 
-        st.markdown("---")
+        st.markdown('<div class="gradient-divider"></div>', unsafe_allow_html=True)
 
-        # ── Records table ─────────────────────────────────
         st.subheader("Session Records")
         st.dataframe(df_history, use_container_width=True, hide_index=True)
 
-        # ── Clear button ──────────────────────────────────
         if st.button("Clear History", type="secondary"):
             st.session_state.diagnosis_history = []
             st.rerun()
