@@ -34,18 +34,22 @@ if "diagnosis_history" not in st.session_state:
     st.session_state.diagnosis_history = []
 
 # ── Custom CSS ────────────────────────────────────────────
-
-# ── Custom CSS ────────────────────────────────────────────
 st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-    body, p, div, span, label, input, select, textarea,
-    .stMarkdown, .stApp {
-        font-family: 'Inter', sans-serif !important;
-    }
+    /* ── Brand Palette ──────────────────────────────────
+       Gold     #E8A020   Light Gold  #F5C85A
+       Rust     #C04B1A   Light Rust  #E8733A
+       Sky      #4A9FD4   Light Sky   #7DC0E8
+       Navy     #1A3A6B   Mid Navy    #2B5FA0
+    ── ─────────────────────────────────────────────── */
 
+    /* Font */
+    * { font-family: 'Inter', sans-serif !important; }
+
+    /* Main background */
     .stApp {
-        background: linear-gradient(160deg, #060D1A 0%, #0A1628 50%, #0F2244 100%);
+        background: linear-gradient(160deg, #0A1628 0%, #0F2040 40%, #1A3A6B 100%);
         min-height: 100vh;
     }
     .main .block-container {
@@ -54,9 +58,11 @@ st.markdown("""
         max-width: 1100px;
     }
 
+    /* All default text */
     .stApp, .stApp p, .stApp li, .stApp span,
     .stMarkdown, .stMarkdown p { color: #C8DCFF !important; }
 
+    /* Headings */
     h1 {
         color: #F5C85A !important;
         font-weight: 900 !important;
@@ -83,7 +89,7 @@ st.markdown("""
     [data-testid="stSidebar"] h3 { color: #F5C85A !important; }
     [data-testid="stSidebar"] hr { border-color: rgba(74,159,212,0.2) !important; }
 
-    /* Glassmorphism card */
+    /* ── Glassmorphism card ─────────────────────────── */
     .glass-card {
         background: rgba(255,255,255,0.04);
         backdrop-filter: blur(12px);
@@ -103,7 +109,7 @@ st.markdown("""
         box-shadow: 0 4px 24px rgba(0,0,0,0.2);
     }
 
-    /* Page header banner */
+    /* ── Page header banner ─────────────────────────── */
     .page-header {
         background: linear-gradient(90deg, rgba(232,160,32,0.12), rgba(192,75,26,0.08));
         border-left: 4px solid #E8A020;
@@ -123,7 +129,46 @@ st.markdown("""
         font-size: 0.9rem !important;
     }
 
-    /* Section header */
+    /* ── Progress steps ─────────────────────────────── */
+    .steps-bar {
+        display: flex; align-items: center; justify-content: center;
+        gap: 0; margin: 1.2rem 0 1.8rem 0;
+    }
+    .step-item {
+        display: flex; flex-direction: column; align-items: center;
+        position: relative;
+    }
+    .step-circle {
+        width: 36px; height: 36px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 800; font-size: 0.85rem;
+        border: 2px solid rgba(125,192,232,0.3);
+        background: rgba(26,58,107,0.6);
+        color: #7DC0E8;
+        transition: all 0.3s;
+    }
+    .step-circle.active {
+        background: linear-gradient(135deg, #E8A020, #C04B1A);
+        border-color: #E8A020;
+        color: white;
+        box-shadow: 0 0 16px rgba(232,160,32,0.4);
+    }
+    .step-circle.done {
+        background: rgba(74,159,212,0.2);
+        border-color: #4A9FD4;
+        color: #4A9FD4;
+    }
+    .step-label {
+        font-size: 0.72rem; color: #7DC0E8 !important;
+        margin-top: 0.3rem; text-align: center; white-space: nowrap;
+    }
+    .step-line {
+        width: 60px; height: 2px;
+        background: linear-gradient(90deg, rgba(125,192,232,0.3), rgba(125,192,232,0.1));
+        margin: 0 4px; margin-bottom: 22px;
+    }
+
+    /* ── Section header ─────────────────────────────── */
     .section-header {
         display: flex; align-items: center; gap: 0.6rem;
         margin-bottom: 1rem; margin-top: 0.5rem;
@@ -139,20 +184,20 @@ st.markdown("""
 
     /* Cover */
     .cover-title {
-        font-size: 2.6rem; font-weight: 900; text-align: center;
-        margin-top: 1rem; letter-spacing: -0.03em;
+        font-size: 3.5rem; font-weight: 900; text-align: center;
+        margin-top: 1.5rem; letter-spacing: -0.03em;
         background: linear-gradient(90deg, #F5C85A 0%, #E8A020 50%, #E8733A 100%);
         -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
     .cover-sub {
-        font-size: 0.88rem; color: #7DC0E8 !important;
+        font-size: 1.1rem; color: #7DC0E8 !important;
         text-align: center; font-weight: 500;
-        letter-spacing: 0.12em; margin-bottom: 0.4rem;
+        letter-spacing: 0.05em; margin-bottom: 0.5rem;
         text-transform: uppercase;
     }
     .cover-desc {
-        font-size: 0.88rem; color: #A8C0E0 !important; text-align: center;
-        max-width: 580px; margin: 0.4rem auto 1.5rem auto; line-height: 1.85;
+        font-size: 0.96rem; color: #A8C0E0 !important; text-align: center;
+        max-width: 660px; margin: 0.5rem auto 2rem auto; line-height: 2;
     }
 
     /* Result boxes */
@@ -232,7 +277,7 @@ st.markdown("""
         background: linear-gradient(90deg, #2B5FA0, #4A9FD4) !important;
     }
 
-    /* ══ File uploader ══ */
+    /* File uploader */
     [data-testid="stFileUploaderDropzone"] {
         background: rgba(26,58,107,0.35) !important;
         border: 2px dashed rgba(232,160,32,0.45) !important;
@@ -244,91 +289,19 @@ st.markdown("""
         background: rgba(232,160,32,0.06) !important;
     }
     [data-testid="stFileUploader"] * { color: #A8C0E0 !important; }
-
-    /* Browse button — hide original text, show "Upload" via ::after */
     [data-testid="stFileUploaderDropzone"] button {
         background: linear-gradient(90deg, #E8A020, #C04B1A) !important;
-        border: none !important;
-        border-radius: 8px !important;
-        font-weight: 700 !important;
-        padding: 0.4rem 1.1rem !important;
-        min-width: 90px !important;
-        font-size: 0 !important;
-        color: transparent !important;
-        position: relative !important;
-    }
-    [data-testid="stFileUploaderDropzone"] button:hover {
-        background: linear-gradient(90deg, #F5C85A, #E8733A) !important;
-        cursor: pointer !important;
-    }
-    /* Hide internal spans/svgs but keep the button itself clickable */
-    [data-testid="stFileUploaderDropzone"] button > span,
-    [data-testid="stFileUploaderDropzone"] button > svg,
-    [data-testid="stFileUploaderDropzone"] button > p {
-        display: none !important;
-    }
-    /* Inject clean label */
-    [data-testid="stFileUploaderDropzone"] button::after {
-        content: "Upload";
-        color: white !important;
-        font-size: 0.82rem !important;
-        font-weight: 700 !important;
-        font-family: 'Inter', sans-serif !important;
-        pointer-events: none;
+        color: white !important; border: none !important;
+        border-radius: 6px !important; font-weight: 600 !important;
     }
 
-    /* "Add files" button → small round + button */
-    [data-testid="stFileUploader"] button[title="Add files"],
-    [data-testid="stFileUploader"] button[aria-label*="add"],
-    [data-testid="stFileUploader"] button[aria-label*="Add"] {
-        background: rgba(232,160,32,0.15) !important;
-        border: 1.5px solid rgba(232,160,32,0.5) !important;
-        border-radius: 50% !important;
-        width: 28px !important; height: 28px !important;
-        min-width: 28px !important; max-width: 28px !important;
-        padding: 0 !important;
-        font-size: 0 !important;
-        color: transparent !important;
-        position: relative !important;
-    }
-    [data-testid="stFileUploader"] button[title="Add files"] > span,
-    [data-testid="stFileUploader"] button[aria-label*="add"] > span,
-    [data-testid="stFileUploader"] button[aria-label*="Add"] > span {
-        display: none !important;
-    }
-    [data-testid="stFileUploader"] button[title="Add files"]::after,
-    [data-testid="stFileUploader"] button[aria-label*="add"]::after,
-    [data-testid="stFileUploader"] button[aria-label*="Add"]::after {
-        content: "+";
-        color: #F5C85A !important;
-        font-size: 1.2rem !important;
-        font-weight: 400 !important;
-        line-height: 1 !important;
-        pointer-events: none;
-    }
-
-    /* Labels — all inputs */
-    .stTextInput label, .stNumberInput label,
+    /* Labels */
+    label, .stTextInput label, .stNumberInput label,
     .stSelectbox label, .stRadio label {
         color: #F5C85A !important; font-weight: 600 !important;
-        font-size: 0.78rem !important; letter-spacing: 0.01em !important;
-        text-transform: none !important;
+        font-size: 0.88rem !important; letter-spacing: 0.03em;
+        text-transform: uppercase;
     }
-
-    /* File uploader label */
-    [data-testid="stFileUploader"] label {
-        color: #A8C0E0 !important; font-weight: 500 !important;
-        font-size: 0.78rem !important; letter-spacing: 0 !important;
-        text-transform: none !important;
-    }
-
-    /* "200MB per file" info text */
-    [data-testid="stFileUploaderDropzone"] small,
-    [data-testid="stFileUploaderDropzone"] > div > small {
-        font-size: 0.68rem !important;
-        color: rgba(168,192,224,0.55) !important;
-    }
-
     .stMarkdown strong { color: #F5C85A !important; font-weight: 700 !important; }
 
     /* Input fields */
