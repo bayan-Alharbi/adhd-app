@@ -24,7 +24,6 @@ from reportlab.lib.enums import TA_CENTER, TA_LEFT
 warnings.filterwarnings("ignore")
 
 st.set_page_config(
-
     page_title="Cortex — ADHD Diagnostic System",
     page_icon="🧠",
     layout="wide"
@@ -38,19 +37,15 @@ if "diagnosis_history" not in st.session_state:
 st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-    /* ── Brand Palette ──────────────────────────────────
-       Gold     #E8A020   Light Gold  #F5C85A
-       Rust     #C04B1A   Light Rust  #E8733A
-       Sky      #4A9FD4   Light Sky   #7DC0E8
-       Navy     #1A3A6B   Mid Navy    #2B5FA0
-    ── ─────────────────────────────────────────────── */
+    /* ── FIX 1: Font — targeted selectors instead of wildcard * ── */
+    body, p, div, span, label, input, select, textarea,
+    .stMarkdown, .stApp {
+        font-family: 'Inter', sans-serif !important;
+    }
 
-    /* Font */
-    * { font-family: 'Inter', sans-serif !important; }
-
-    /* Main background */
+    /* ── FIX 4: Darker main background ── */
     .stApp {
-        background: linear-gradient(160deg, #0A1628 0%, #0F2040 40%, #1A3A6B 100%);
+        background: linear-gradient(160deg, #060D1A 0%, #0A1628 50%, #0F2244 100%);
         min-height: 100vh;
     }
     .main .block-container {
@@ -390,6 +385,16 @@ def predict_eeg(wins):
     return probs
 
 
+# ── Helper: Transparent Gauge Layout ─────────────────────
+def transparent_gauge_layout(height=320):
+    return dict(
+        height=height,
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font=dict(color="#E8F0FF"),
+    )
+
+
 # ── PDF Report Generator ──────────────────────────────────
 def generate_pdf_report(patient_name, patient_age, patient_gender,
                          p_eeg, p_hyp, meta_prob, has_eeg, has_hyp):
@@ -532,8 +537,6 @@ def generate_pdf_report(patient_name, patient_age, patient_gender,
     return buffer
 
 
-
-
 # ══════════════════════════════════════════════════════════
 # SIDEBAR
 # ══════════════════════════════════════════════════════════
@@ -553,7 +556,6 @@ mode = st.sidebar.radio("Navigation", [
 # Page 0 — Home / Cover
 # ══════════════════════════════════════════════════════════
 if mode == "Home":
-    # ── Logo centered ─────────────────────────────────────
     col_l, col_c, col_r = st.columns([1, 2, 1])
     with col_c:
         logo_path = os.path.join(os.path.dirname(__file__), "cortex_logo.png")
@@ -581,7 +583,8 @@ elif mode == "EEG-Based ADHD Diagnosis":
     <p>Upload a brain signal file to receive an AI-based ADHD diagnostic result.</p>
     </div>""", unsafe_allow_html=True)
 
-    uploaded = st.file_uploader("Upload EEG file (.mat)", type=["mat"])
+    # FIX 3: label merged into uploader text
+    uploaded = st.file_uploader("EEG File — Upload .mat", type=["mat"])
     if uploaded:
         import scipy.io, tempfile
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mat") as tmp:
@@ -606,22 +609,24 @@ elif mode == "EEG-Based ADHD Diagnosis":
                 mean_prob = probs.mean()
                 is_adhd   = mean_prob >= 0.5
 
+                # FIX 2: Transparent gauge background
                 fig_g = go.Figure(go.Indicator(
                     mode  = "gauge+number",
                     value = mean_prob * 100,
-                    number= {"suffix": "%", "font": {"size": 40}},
-                    title = {"text": "ADHD Likelihood", "font": {"size": 18}},
+                    number= {"suffix": "%", "font": {"size": 40, "color": "#E8F0FF"}},
+                    title = {"text": "ADHD Likelihood", "font": {"size": 18, "color": "#E8F0FF"}},
                     gauge = {
-                        "axis"     : {"range": [0, 100]},
+                        "axis"     : {"range": [0, 100], "tickcolor": "#E8F0FF"},
                         "bar"      : {"color": "#E74C3C" if is_adhd else "#2ECC71"},
+                        "bgcolor"  : "rgba(232,160,32,0.08)",
                         "steps"    : [
                             {"range": [0,  50], "color": "rgba(46,204,113,0.15)"},
                             {"range": [50, 100], "color": "rgba(231,76,60,0.15)"},
                         ],
-                        "threshold": {"line": {"color": "black", "width": 3}, "value": 50}
+                        "threshold": {"line": {"color": "#E8F0FF", "width": 3}, "value": 50},
                     }
                 ))
-                fig_g.update_layout(height=320, template="plotly_white")
+                fig_g.update_layout(**transparent_gauge_layout(320))
                 st.plotly_chart(fig_g, use_container_width=True)
 
                 if is_adhd:
@@ -661,7 +666,8 @@ elif mode == "Behavioral ADHD Diagnosis":
     <p>Upload a behavioral data file to receive an AI-based ADHD diagnostic result.</p>
     </div>""", unsafe_allow_html=True)
 
-    f = st.file_uploader("Upload behavioral data file (.csv)", type=["csv"])
+    # FIX 3: label merged into uploader text
+    f = st.file_uploader("Behavioral Data File — Upload .csv", type=["csv"])
     if f:
         try:
             df_in = pd.read_csv(f, sep=";").fillna(0)
@@ -680,26 +686,26 @@ elif mode == "Behavioral ADHD Diagnosis":
             mean_prob  = float(meta_probs.mean())
             is_adhd    = mean_prob >= 0.5
 
-            # ── Gauge ─────────────────────────────────────
+            # FIX 2: Transparent gauge background
             fig_g = go.Figure(go.Indicator(
                 mode  = "gauge+number",
                 value = mean_prob * 100,
-                number= {"suffix": "%", "font": {"size": 40}},
-                title = {"text": "ADHD Likelihood", "font": {"size": 18}},
+                number= {"suffix": "%", "font": {"size": 40, "color": "#E8F0FF"}},
+                title = {"text": "ADHD Likelihood", "font": {"size": 18, "color": "#E8F0FF"}},
                 gauge = {
-                    "axis"     : {"range": [0, 100]},
+                    "axis"     : {"range": [0, 100], "tickcolor": "#E8F0FF"},
                     "bar"      : {"color": "#E74C3C" if is_adhd else "#2ECC71"},
+                    "bgcolor"  : "rgba(232,160,32,0.08)",
                     "steps"    : [
                         {"range": [0,  50], "color": "rgba(46,204,113,0.15)"},
                         {"range": [50, 100], "color": "rgba(231,76,60,0.15)"},
                     ],
-                    "threshold": {"line": {"color": "black", "width": 3}, "value": 50}
+                    "threshold": {"line": {"color": "#E8F0FF", "width": 3}, "value": 50},
                 }
             ))
-            fig_g.update_layout(height=320, template="plotly_white")
+            fig_g.update_layout(**transparent_gauge_layout(320))
             st.plotly_chart(fig_g, use_container_width=True)
 
-            # ── Result card ───────────────────────────────
             if is_adhd:
                 st.markdown(f"""
                 <div class="result-box result-adhd">
@@ -765,17 +771,17 @@ elif mode == "Integrated ADHD Diagnosis":
         patient_age    = st.number_input("Age", min_value=1, max_value=120, value=25)
     with pi3:
         patient_gender = st.selectbox("Gender", ["Male", "Female"])
-
     st.markdown("</div>", unsafe_allow_html=True)
+
     st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
     st.markdown("<h3 style='color:#F5C85A;margin-bottom:1rem;letter-spacing:-0.01em;'>Upload Data Files</h3>", unsafe_allow_html=True)
     col_eeg, col_hyp = st.columns(2)
+
+    # FIX 3: labels merged into uploader text — removes the stacked-label overlap
     with col_eeg:
-        st.markdown("<span style='color:#F5C85A;font-weight:700;font-size:1rem;'>EEG File</span>", unsafe_allow_html=True)
-        eeg_file = st.file_uploader("Upload .mat file", type=["mat"], key="meta_eeg")
+        eeg_file = st.file_uploader("EEG File — Upload .mat", type=["mat"], key="meta_eeg")
     with col_hyp:
-        st.markdown("<span style='color:#F5C85A;font-weight:700;font-size:1rem;'>Behavioral Data File</span>", unsafe_allow_html=True)
-        hyp_file = st.file_uploader("Upload .csv file", type=["csv"], key="meta_hyp")
+        hyp_file = st.file_uploader("Behavioral Data File — Upload .csv", type=["csv"], key="meta_hyp")
 
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -836,26 +842,26 @@ elif mode == "Integrated ADHD Diagnosis":
         meta_prob = meta_model.predict_proba(x_meta)[0, 1]
         is_adhd   = meta_prob >= 0.5
 
-        # ── Gauge ─────────────────────────────────────────
+        # FIX 2: Transparent gauge background
         fig_g = go.Figure(go.Indicator(
             mode  = "gauge+number",
             value = meta_prob * 100,
-            number= {"suffix": "%", "font": {"size": 40}},
-            title = {"text": "ADHD Likelihood", "font": {"size": 18}},
+            number= {"suffix": "%", "font": {"size": 40, "color": "#E8F0FF"}},
+            title = {"text": "ADHD Likelihood", "font": {"size": 18, "color": "#E8F0FF"}},
             gauge = {
-                "axis"     : {"range": [0, 100]},
+                "axis"     : {"range": [0, 100], "tickcolor": "#E8F0FF"},
                 "bar"      : {"color": "#E74C3C" if is_adhd else "#2ECC71"},
+                "bgcolor"  : "rgba(232,160,32,0.08)",
                 "steps"    : [
                     {"range": [0,  50], "color": "rgba(46,204,113,0.15)"},
                     {"range": [50, 100], "color": "rgba(231,76,60,0.15)"},
                 ],
-                "threshold": {"line": {"color": "black", "width": 3}, "value": 50}
+                "threshold": {"line": {"color": "#E8F0FF", "width": 3}, "value": 50},
             }
         ))
-        fig_g.update_layout(height=340, template="plotly_white")
+        fig_g.update_layout(**transparent_gauge_layout(340))
         st.plotly_chart(fig_g, use_container_width=True)
 
-        # ── Result card ───────────────────────────────────
         if is_adhd:
             st.markdown(f"""
             <div class="result-box result-adhd">
@@ -936,7 +942,6 @@ elif mode == "History":
     else:
         df_history = pd.DataFrame(st.session_state.diagnosis_history)
 
-        # ── Summary metrics ───────────────────────────────
         total  = len(df_history)
         adhd_n = (df_history["Diagnosis"] == "ADHD 🔴").sum()
         ctrl_n = total - adhd_n
@@ -947,12 +952,9 @@ elif mode == "History":
         c3.metric("Control",         int(ctrl_n))
 
         st.markdown("---")
-
-        # ── Records table ─────────────────────────────────
         st.subheader("Session Records")
         st.dataframe(df_history, use_container_width=True, hide_index=True)
 
-        # ── Clear button ──────────────────────────────────
         if st.button("Clear History", type="secondary"):
             st.session_state.diagnosis_history = []
             st.rerun()
