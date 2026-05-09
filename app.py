@@ -243,7 +243,7 @@ st.markdown("""
     }
     [data-testid="stFileUploader"] * { color: #A8C0E0 !important; }
 
-    /* Style the browse button WITHOUT hiding its children */
+    /* Browse button */
     [data-testid="stFileUploaderDropzone"] button {
         background: linear-gradient(90deg, #E8A020, #C04B1A) !important;
         color: white !important;
@@ -252,13 +252,11 @@ st.markdown("""
         font-weight: 700 !important;
         font-size: 0.82rem !important;
         padding: 0.4rem 1.1rem !important;
-        min-width: 110px !important;
     }
     [data-testid="stFileUploaderDropzone"] button:hover {
         background: linear-gradient(90deg, #F5C85A, #E8733A) !important;
         cursor: pointer !important;
     }
-    /* Keep button text white (overrides the * selector above) */
     [data-testid="stFileUploaderDropzone"] button span,
     [data-testid="stFileUploaderDropzone"] button p {
         color: white !important;
