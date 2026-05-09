@@ -125,29 +125,40 @@ st.markdown("""
         font-size: 0.9rem !important;
     }
 
-    /* ── Progress steps ─────────────────────────────── */
+    /* ── Progress steps — vertical card ────────────── */
     .steps-bar {
-        display: flex; align-items: center; justify-content: center;
-        gap: 0; margin: 1.2rem 0 1.8rem 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        margin: 0 0 1.6rem 0;
+        padding: 1rem 1.2rem;
+        background: rgba(255,255,255,0.03);
+        border: 1px solid rgba(125,192,232,0.12);
+        border-radius: 14px;
+        width: fit-content;
+        float: right;
+        clear: both;
     }
     .step-item {
-        display: flex; flex-direction: column; align-items: center;
-        position: relative;
+        display: flex; flex-direction: row; align-items: center;
+        gap: 0.7rem;
     }
     .step-circle {
-        width: 36px; height: 36px; border-radius: 50%;
+        width: 30px; height: 30px; border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
-        font-weight: 800; font-size: 0.85rem;
+        font-weight: 800; font-size: 0.78rem;
         border: 2px solid rgba(125,192,232,0.3);
         background: rgba(26,58,107,0.6);
         color: #7DC0E8;
+        flex-shrink: 0;
         transition: all 0.3s;
     }
     .step-circle.active {
         background: linear-gradient(135deg, #E8A020, #C04B1A);
         border-color: #E8A020;
         color: white;
-        box-shadow: 0 0 16px rgba(232,160,32,0.4);
+        box-shadow: 0 0 14px rgba(232,160,32,0.45);
     }
     .step-circle.done {
         background: rgba(74,159,212,0.2);
@@ -155,13 +166,13 @@ st.markdown("""
         color: #4A9FD4;
     }
     .step-label {
-        font-size: 0.72rem; color: #7DC0E8 !important;
-        margin-top: 0.3rem; text-align: center; white-space: nowrap;
+        font-size: 0.78rem; color: #A8C0E0 !important;
+        white-space: nowrap; font-weight: 500;
     }
     .step-line {
-        width: 60px; height: 2px;
-        background: linear-gradient(90deg, rgba(125,192,232,0.3), rgba(125,192,232,0.1));
-        margin: 0 4px; margin-bottom: 22px;
+        width: 2px; height: 18px;
+        background: linear-gradient(180deg, rgba(232,160,32,0.5), rgba(125,192,232,0.15));
+        margin: 2px 0 2px 14px;
     }
 
     /* ── Section header ─────────────────────────────── */
@@ -306,11 +317,19 @@ st.markdown("""
         text-transform: none !important;
     }
 
-    /* Fix upload button internal text overlap */
-    [data-testid="stFileUploaderDropzone"] button span {
+    /* Fix upload button — collapse font on container, restore on first span only */
+    [data-testid="stFileUploaderDropzone"] button {
+        font-size: 0 !important;
+        min-width: 88px !important;
+    }
+    [data-testid="stFileUploaderDropzone"] button > span:first-child {
         font-size: 0.82rem !important;
-        letter-spacing: 0 !important;
         font-weight: 600 !important;
+        letter-spacing: 0 !important;
+        display: inline-block !important;
+    }
+    [data-testid="stFileUploaderDropzone"] button > span:not(:first-child) {
+        display: none !important;
     }
     .stMarkdown strong { color: #F5C85A !important; font-weight: 700 !important; }
 
@@ -773,7 +792,8 @@ elif mode == "Integrated ADHD Diagnosis":
         <div class="step-circle active">4</div>
         <div class="step-label">Report</div>
       </div>
-    </div>""", unsafe_allow_html=True)
+    </div>
+    <div style="clear:both"></div>""", unsafe_allow_html=True)
 
     # ── Patient Info ──────────────────────────────────────
     st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
@@ -786,6 +806,15 @@ elif mode == "Integrated ADHD Diagnosis":
     with pi3:
         patient_gender = st.selectbox("Gender", ["Male", "Female"])
     st.markdown("</div>", unsafe_allow_html=True)
+
+    st.markdown("""
+    <div style="
+        height: 4px;
+        background: linear-gradient(90deg, #E8A020 0%, #C04B1A 40%, rgba(74,159,212,0.3) 100%);
+        border-radius: 4px;
+        margin: 0.4rem 0 1.2rem 0;
+        box-shadow: 0 2px 12px rgba(232,160,32,0.25);
+    "></div>""", unsafe_allow_html=True)
 
     st.markdown("<div class='glass-card'>", unsafe_allow_html=True)
     st.markdown("<h3 style='color:#F5C85A;margin-bottom:1rem;letter-spacing:-0.01em;'>Upload Data Files</h3>", unsafe_allow_html=True)
