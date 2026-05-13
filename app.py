@@ -866,7 +866,7 @@ elif mode == "History":
         df_history = pd.DataFrame(st.session_state.diagnosis_history)
 
         total  = len(df_history)
-        adhd_n = (df_history["Diagnosis"] == "ADHD 🔴").sum()
+        adhd_n = (df_history["Diagnosis"] == "ADHD").sum()
         ctrl_n = total - adhd_n
 
         c1, c2, c3 = st.columns(3)
