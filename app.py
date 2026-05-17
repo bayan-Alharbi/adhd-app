@@ -408,14 +408,18 @@ def generate_pdf_report(patient_name, patient_age, patient_gender,
                        "The integrated analysis of both EEG brain signals and behavioral data "
                        "shows no significant ADHD-associated patterns. Routine follow-up is advised if symptoms persist.")
     elif has_eeg:
-        interp_text = ("EEG brain signal patterns indicate significant ADHD-associated findings."
+        interp_text = ("The integrated analysis of both EEG brain signals and behavioral data "
+                       "indicates significant ADHD-associated patterns. Further clinical evaluation is recommended."
                        if meta_prob >= 0.5 else
-                       "EEG brain signal patterns show no significant ADHD-associated findings.")
+                     "The integrated analysis of both EEG brain signals and behavioral data "
+                       "shows no significant ADHD-associated patterns. Routine follow-up is advised if symptoms persist.")
     else:
-        interp_text = ("Behavioral data patterns indicate significant ADHD-associated findings."
+        interp_text = ("The integrated analysis of both EEG brain signals and behavioral data "
+                       "indicates significant ADHD-associated patterns. Further clinical evaluation is recommended."
                        if meta_prob >= 0.5 else
-                       "Behavioral data patterns show no significant ADHD-associated findings.")
-
+                       "The integrated analysis of both EEG brain signals and behavioral data "
+                       "shows no significant ADHD-associated patterns. Routine follow-up is advised if symptoms persist.")
+        
     diagnosis_label = "ADHD Detected" if meta_prob >= 0.5 else "No ADHD Detected"
 
     now      = datetime.now()
